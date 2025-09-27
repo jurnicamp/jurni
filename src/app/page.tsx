@@ -111,7 +111,7 @@ const mockTrips: Trip[] = [
     season: 'Spring',
     tags: ['Hiking', 'Photography', 'Sunrise'],
     distance: 12.5,
-    user: mockUsers[0],
+    user: mockUsers[0]!,
     photos: [
       { url: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=450&fit=crop' },
       { url: 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&h=450&fit=crop' },
@@ -135,7 +135,7 @@ const mockTrips: Trip[] = [
     season: 'Summer',
     tags: ['Camping', 'Lake', 'Friends'],
     distance: 8.2,
-    user: mockUsers[1],
+    user: mockUsers[1]!,
     photos: [
       { url: 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&h=450&fit=crop' },
       { url: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=450&fit=crop' },
@@ -158,7 +158,7 @@ const mockTrips: Trip[] = [
     season: 'Fall',
     tags: ['Backpacking', 'Desert', 'Solo'],
     distance: 25.8,
-    user: mockUsers[2],
+    user: mockUsers[2]!,
     photos: [
       { url: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=450&fit=crop' },
       { url: 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&h=450&fit=crop' },
@@ -245,7 +245,7 @@ export default function HomePage() {
 
     if (authMode === 'signin') {
       // Simple sign in - just use first mock user for demo
-      const mockUser = mockUsers[0]
+      const mockUser = mockUsers[0]!
       setUser(mockUser)
       setShowAuthModal(false)
       setAuthForm({ name: '', email: '', password: '' })
@@ -630,7 +630,7 @@ export default function HomePage() {
                   {trip.photos && trip.photos.length > 0 ? (
                     <div className="relative h-64 overflow-hidden">
                       <Image
-                        src={trip.photos[0].url}
+                        src={trip.photos[0]?.url || ''}
                         alt={trip.title}
                         fill
                         className="object-cover group-hover:scale-105 transition-transform duration-200"

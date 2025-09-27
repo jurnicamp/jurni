@@ -50,7 +50,7 @@ export function TripCard({ trip, index }: TripCardProps) {
       {trip.photos && trip.photos.length > 0 ? (
         <div className="relative h-48 overflow-hidden">
           <Image
-            src={trip.photos[0].url}
+            src={trip.photos[0]?.url || ''}
             alt={trip.title}
             fill
             className="object-cover group-hover:scale-105 transition-transform duration-200"
