@@ -1,65 +1,16 @@
-# CampShare
+# CampShare Web App
 
-A modern social media platform for camping and outdoor adventures, built with Next.js and ready for Vercel deployment.
+A modern Next.js web application for sharing camping and outdoor adventure stories.
 
-## 🏕️ About
+## Features
 
-CampShare connects outdoor enthusiasts to share their camping experiences, discover new spots, and build a community around wilderness adventures.
+- 🏕️ **Share Adventures**: Upload photos and stories about your camping trips
+- 🗺️ **Discover Locations**: Find new camping spots shared by the community
+- 👥 **Connect**: Follow fellow outdoor enthusiasts
+- 📱 **Responsive**: Works perfectly on desktop and mobile
+- ⚡ **Fast**: Built with Next.js 14 and optimized for performance
 
-## ✨ Features
-
-- **Share Adventures**: Upload photos and write about your camping trips
-- **Discover Locations**: Find hidden gems and popular camping destinations
-- **Connect with Others**: Follow fellow adventurers and build community
-- **Responsive Design**: Works perfectly on desktop and mobile
-- **Modern Tech Stack**: Built with Next.js 14, TypeScript, and Tailwind CSS
-
-## 🚀 Quick Start
-
-### Prerequisites
-- Node.js 18+
-- npm or yarn
-
-### Installation
-
-1. **Clone the repository:**
-```bash
-git clone <your-repo-url>
-cd jurni
-```
-
-2. **Install dependencies:**
-```bash
-cd web
-npm install
-```
-
-3. **Start development server:**
-```bash
-npm run dev
-```
-
-4. **Open your browser:**
-Visit [http://localhost:3000](http://localhost:3000)
-
-## 📁 Project Structure
-
-```
-jurni/
-├── web/                    # Next.js web application
-│   ├── src/
-│   │   ├── app/           # Next.js App Router pages
-│   │   ├── components/    # Reusable React components
-│   │   └── lib/          # Utility functions
-│   ├── public/           # Static assets
-│   ├── package.json      # Dependencies and scripts
-│   └── README.md         # Web app documentation
-├── .gitignore            # Git ignore rules
-├── LICENSE               # MIT License
-└── README.md             # This file
-```
-
-## 🛠️ Tech Stack
+## Tech Stack
 
 - **Framework**: Next.js 14 with App Router
 - **Language**: TypeScript
@@ -68,29 +19,69 @@ jurni/
 - **Icons**: Lucide React
 - **State Management**: Zustand
 - **Data Fetching**: TanStack Query
-- **Deployment**: Vercel Ready
+- **Notifications**: Sonner
 
-## 🚀 Deployment
+## Getting Started
+
+### Prerequisites
+
+- Node.js 18+ 
+- npm or yarn
+
+### Installation
+
+1. Install dependencies:
+```bash
+npm install
+```
+
+2. Create environment file:
+```bash
+cp .env.example .env.local
+```
+
+3. Update environment variables in `.env.local`
+
+4. Run development server:
+```bash
+npm run dev
+```
+
+5. Open [http://localhost:3000](http://localhost:3000) in your browser
+
+## Available Scripts
+
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run start` - Start production server
+- `npm run lint` - Run ESLint
+
+## Deployment
 
 This app is ready for deployment on Vercel:
 
-1. Push your code to GitHub
-2. Connect your repository to Vercel
-3. Deploy automatically with zero configuration
+1. Push to GitHub
+2. Connect to Vercel
+3. Deploy automatically
 
-## 📝 Available Scripts
+## Project Structure
 
-```bash
-# Development
-npm run dev          # Start development server
-npm run build        # Build for production
-npm run start        # Start production server
-npm run lint         # Run ESLint
+```
+web/
+├── src/
+│   ├── app/           # Next.js App Router pages
+│   ├── components/    # Reusable React components
+│   └── lib/          # Utility functions
+├── public/           # Static assets
+├── package.json      # Dependencies and scripts
+├── tailwind.config.js # Tailwind configuration
+├── tsconfig.json     # TypeScript configuration
+└── next.config.js    # Next.js configuration
 ```
 
-## 🔧 Environment Variables
+## Environment Variables
 
-Create a `.env.local` file in the `web/` directory:
+Create a `.env.local` file with:
 
 ```bash
 DATABASE_URL=postgresql://...
@@ -100,19 +91,13 @@ GOOGLE_MAPS_API_KEY=your-google-maps-key
 NEXT_PUBLIC_APP_URL=http://localhost:3000
 ```
 
-## 🤝 Contributing
+## Contributing
 
 1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+2. Create a feature branch
+3. Make your changes
+4. Submit a pull request
 
-## 📄 License
+## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 🙏 Acknowledgments
-
-- Built with ❤️ for the outdoor community
-- Inspired by the beauty of nature and adventure
+MIT License - see LICENSE file for details.
