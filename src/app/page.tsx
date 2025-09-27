@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Tent, Mountain, Camera, Users, MapPin, Heart, MessageCircle, Plus, Star, BookOpen, Clock, Users2, Bookmark, Share2, Search, Filter, SortAsc, LogOut, User, Settings, Moon, Sun, Campfire } from 'lucide-react'
+import { Tent, Mountain, Camera, Users, MapPin, Heart, MessageCircle, Plus, Star, BookOpen, Clock, Users2, Bookmark, Share2, Search, Filter, SortAsc, LogOut, User, Settings, Moon, Sun, TreePine } from 'lucide-react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { motion } from 'framer-motion'
@@ -303,7 +303,7 @@ export default function HomePage() {
               transition={{ duration: 0.5 }}
             >
               <div className="w-8 h-8 bg-primary-600 dark:bg-primary-500 rounded-lg flex items-center justify-center">
-                <Campfire className="w-5 h-5 text-white" />
+                <TreePine className="w-5 h-5 text-white" />
               </div>
               <span className="text-2xl font-bold text-gray-800 dark:text-white">Jurni</span>
             </motion.div>
@@ -748,7 +748,7 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2">
-              <Campfire className="w-6 h-6" />
+              <TreePine className="w-6 h-6" />
               <span className="text-xl font-bold">Jurni</span>
             </div>
             
