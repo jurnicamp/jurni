@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Tent, Mountain, Camera, Users, MapPin, Heart, MessageCircle, Plus, Star } from 'lucide-react'
+import { Tent, Mountain, Camera, Users, MapPin, Heart, MessageCircle, Plus, Star, BookOpen, Clock, Users2, Bookmark, Share2 } from 'lucide-react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { motion } from 'framer-motion'
@@ -12,8 +12,26 @@ interface User {
   avatar?: string
 }
 
+interface Trip {
+  id: string
+  title: string
+  description: string
+  location: string
+  difficulty: 'easy' | 'moderate' | 'hard'
+  likes: number
+  comments: number
+  timestamp: Date
+  user: User
+  photos: { url: string }[]
+  duration?: string
+  groupSize?: number
+  season?: string
+  tags?: string[]
+  distance?: number
+}
+
 // Mock data - replace with real API calls
-const mockTrips = [
+const mockTrips: Trip[] = [
   {
     id: '1',
     title: 'Amazing Mountain Hike',
@@ -23,12 +41,19 @@ const mockTrips = [
     likes: 24,
     comments: 8,
     timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000), // 2 hours ago
+    duration: '2 days',
+    groupSize: 4,
+    season: 'Spring',
+    tags: ['Hiking', 'Photography', 'Sunrise'],
+    distance: 12.5,
     user: {
       name: 'Sarah Johnson',
       avatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=40&h=40&fit=crop&crop=face'
     },
     photos: [
-      { url: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop' }
+      { url: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=450&fit=crop' },
+      { url: 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&h=450&fit=crop' },
+      { url: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&h=450&fit=crop' }
     ]
   },
   {
@@ -40,12 +65,18 @@ const mockTrips = [
     likes: 18,
     comments: 12,
     timestamp: new Date(Date.now() - 5 * 60 * 60 * 1000), // 5 hours ago
+    duration: '3 days',
+    groupSize: 6,
+    season: 'Summer',
+    tags: ['Camping', 'Lake', 'Friends'],
+    distance: 8.2,
     user: {
       name: 'Mike Chen',
       avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face'
     },
     photos: [
-      { url: 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=400&h=300&fit=crop' }
+      { url: 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&h=450&fit=crop' },
+      { url: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=450&fit=crop' }
     ]
   },
   {
@@ -57,20 +88,29 @@ const mockTrips = [
     likes: 31,
     comments: 5,
     timestamp: new Date(Date.now() - 24 * 60 * 60 * 1000), // 1 day ago
+    duration: '3 days',
+    groupSize: 2,
+    season: 'Fall',
+    tags: ['Backpacking', 'Desert', 'Solo'],
+    distance: 25.8,
     user: {
       name: 'Alex Rivera',
       avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face'
     },
     photos: [
-      { url: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop' }
+      { url: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=450&fit=crop' },
+      { url: 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&h=450&fit=crop' },
+      { url: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=800&h=450&fit=crop' },
+      { url: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=800&h=450&fit=crop' }
     ]
   }
 ]
 
 export default function HomePage() {
-  const [trips, setTrips] = useState(mockTrips)
+  const [trips, setTrips] = useState<Trip[]>(mockTrips)
   const [loading, setLoading] = useState(false)
   const [user, setUser] = useState<User | null>(null) // Mock user state with proper typing
+  const [savedTrips, setSavedTrips] = useState<Set<string>>(new Set())
 
   const formatTimeAgo = (timestamp: Date) => {
     const now = new Date()
@@ -87,6 +127,18 @@ export default function HomePage() {
     return `${diffInWeeks}w ago`
   }
 
+  const toggleSaveTrip = (tripId: string) => {
+    setSavedTrips(prev => {
+      const newSet = new Set(prev)
+      if (newSet.has(tripId)) {
+        newSet.delete(tripId)
+      } else {
+        newSet.add(tripId)
+      }
+      return newSet
+    })
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 via-blue-50 to-purple-50">
       {/* Navigation */}
@@ -100,9 +152,9 @@ export default function HomePage() {
               transition={{ duration: 0.5 }}
             >
               <div className="w-8 h-8 bg-primary-600 rounded-lg flex items-center justify-center">
-                <Tent className="w-5 h-5 text-white" />
+                <BookOpen className="w-5 h-5 text-white" />
               </div>
-              <span className="text-2xl font-bold text-gray-800">CampShare</span>
+              <span className="text-2xl font-bold text-gray-800">Jurni</span>
             </motion.div>
             
             <div className="flex items-center space-x-4">
@@ -271,14 +323,22 @@ export default function HomePage() {
                   transition={{ duration: 0.5, delay: index * 0.1 }}
                   whileHover={{ y: -5 }}
                 >
+                  {/* Enhanced Photo Section with 16:9 aspect ratio */}
                   {trip.photos && trip.photos.length > 0 ? (
-                    <div className="relative h-48 overflow-hidden">
+                    <div className="relative h-64 overflow-hidden">
                       <Image
                         src={trip.photos[0].url}
                         alt={trip.title}
                         fill
                         className="object-cover group-hover:scale-105 transition-transform duration-200"
                       />
+                      {/* Photo count indicator */}
+                      {trip.photos.length > 1 && (
+                        <div className="absolute top-3 left-3 bg-black/50 text-white px-2 py-1 rounded-full text-xs font-medium">
+                          +{trip.photos.length - 1} more
+                        </div>
+                      )}
+                      {/* Difficulty badge */}
                       <div className="absolute top-3 right-3">
                         <span className={`px-2 py-1 text-xs font-medium rounded-full ${
                           trip.difficulty === 'easy' ? 'bg-green-100 text-green-800' :
@@ -288,15 +348,32 @@ export default function HomePage() {
                           {trip.difficulty}
                         </span>
                       </div>
+                      {/* Action buttons overlay */}
+                      <div className="absolute top-3 right-12 flex space-x-2">
+                        <button
+                          onClick={() => toggleSaveTrip(trip.id)}
+                          className={`p-2 rounded-full transition-colors ${
+                            savedTrips.has(trip.id) 
+                              ? 'bg-primary-600 text-white' 
+                              : 'bg-white/80 text-gray-600 hover:bg-white'
+                          }`}
+                        >
+                          <Bookmark className="w-4 h-4" />
+                        </button>
+                        <button className="p-2 bg-white/80 text-gray-600 rounded-full hover:bg-white transition-colors">
+                          <Share2 className="w-4 h-4" />
+                        </button>
+                      </div>
                     </div>
                   ) : (
-                    <div className="h-48 bg-gray-100 flex items-center justify-center">
+                    <div className="h-64 bg-gray-100 flex items-center justify-center">
                       <Camera className="w-12 h-12 text-gray-400" />
                     </div>
                   )}
                   
                   <div className="p-6">
-                    <div className="flex items-center space-x-3 mb-3">
+                    {/* User info */}
+                    <div className="flex items-center space-x-3 mb-4">
                       <Image
                         src={trip.user.avatar || `https://via.placeholder.com/40x40/22C55E/FFFFFF?text=${trip.user.name?.charAt(0) || 'U'}`}
                         alt={trip.user.name}
@@ -310,14 +387,64 @@ export default function HomePage() {
                       </div>
                     </div>
                     
+                    {/* Trip title and description */}
                     <h3 className="font-semibold text-gray-900 mb-2 line-clamp-1">{trip.title}</h3>
-                    <p className="text-gray-600 text-sm mb-3 line-clamp-2">{trip.description}</p>
+                    <p className="text-gray-600 text-sm mb-4 line-clamp-2">{trip.description}</p>
                     
-                    <div className="flex items-center text-sm text-gray-500 mb-4">
-                      <MapPin className="w-4 h-4 mr-1 flex-shrink-0" />
-                      <span className="truncate">{trip.location}</span>
+                    {/* Trip metadata */}
+                    <div className="space-y-2 mb-4">
+                      <div className="flex items-center text-sm text-gray-500">
+                        <MapPin className="w-4 h-4 mr-2 flex-shrink-0" />
+                        <span className="truncate">{trip.location}</span>
+                        {trip.distance && (
+                          <span className="ml-2 text-xs bg-gray-100 px-2 py-1 rounded-full">
+                            {trip.distance}mi away
+                          </span>
+                        )}
+                      </div>
+                      
+                      <div className="flex items-center space-x-4 text-sm text-gray-500">
+                        {trip.duration && (
+                          <div className="flex items-center">
+                            <Clock className="w-4 h-4 mr-1" />
+                            <span>{trip.duration}</span>
+                          </div>
+                        )}
+                        {trip.groupSize && (
+                          <div className="flex items-center">
+                            <Users2 className="w-4 h-4 mr-1" />
+                            <span>{trip.groupSize} people</span>
+                          </div>
+                        )}
+                        {trip.season && (
+                          <div className="flex items-center">
+                            <Star className="w-4 h-4 mr-1" />
+                            <span>{trip.season}</span>
+                          </div>
+                        )}
+                      </div>
                     </div>
                     
+                    {/* Tags */}
+                    {trip.tags && trip.tags.length > 0 && (
+                      <div className="flex flex-wrap gap-1 mb-4">
+                        {trip.tags.slice(0, 3).map((tag, tagIndex) => (
+                          <span
+                            key={tagIndex}
+                            className="px-2 py-1 bg-primary-50 text-primary-700 text-xs rounded-full"
+                          >
+                            {tag}
+                          </span>
+                        ))}
+                        {trip.tags.length > 3 && (
+                          <span className="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-full">
+                            +{trip.tags.length - 3}
+                          </span>
+                        )}
+                      </div>
+                    )}
+                    
+                    {/* Engagement stats */}
                     <div className="flex items-center justify-between">
                       <div className="flex items-center space-x-4 text-sm text-gray-500">
                         <div className="flex items-center hover:text-red-500 cursor-pointer transition-colors">
@@ -361,8 +488,8 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2">
-              <Tent className="w-6 h-6" />
-              <span className="text-xl font-bold">CampShare</span>
+              <BookOpen className="w-6 h-6" />
+              <span className="text-xl font-bold">Jurni</span>
             </div>
             
             <div className="flex items-center space-x-8">
