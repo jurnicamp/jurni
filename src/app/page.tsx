@@ -600,7 +600,7 @@ export default function HomePage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 1 }}
             >
-              Join millions of explorers sharing their wilderness stories, discovering hidden gems, and building the world's largest outdoor community.
+              Join millions of explorers sharing their wilderness stories, discovering hidden gems, and building the world&apos;s largest outdoor community.
             </motion.p>
 
             {/* Dynamic Statistics */}
