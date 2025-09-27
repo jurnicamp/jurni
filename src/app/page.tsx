@@ -6,6 +6,12 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { motion } from 'framer-motion'
 
+// Types
+interface User {
+  name: string
+  avatar?: string
+}
+
 // Mock data - replace with real API calls
 const mockTrips = [
   {
@@ -64,7 +70,7 @@ const mockTrips = [
 export default function HomePage() {
   const [trips, setTrips] = useState(mockTrips)
   const [loading, setLoading] = useState(false)
-  const [user, setUser] = useState(null) // Mock user state
+  const [user, setUser] = useState<User | null>(null) // Mock user state with proper typing
 
   const formatTimeAgo = (timestamp: Date) => {
     const now = new Date()
