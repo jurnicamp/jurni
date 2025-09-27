@@ -327,7 +327,9 @@ export default function HomePage() {
               <div className="w-8 h-8 bg-primary-600 dark:bg-primary-500 rounded-lg flex items-center justify-center">
                 <TreePine className="w-5 h-5 text-white" />
               </div>
-              <span className="text-2xl font-bold text-gray-800 dark:text-white">Jurni</span>
+              <span className="text-2xl font-bold text-gray-800 dark:text-white">
+                {process.env.NEXT_PUBLIC_APP_NAME}
+              </span>
             </motion.div>
 
             {/* Search Bar */}
@@ -819,7 +821,7 @@ export default function HomePage() {
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2">
               <TreePine className="w-6 h-6" />
-              <span className="text-xl font-bold">Jurni</span>
+              <span className="text-xl font-bold">{process.env.NEXT_PUBLIC_APP_NAME}</span>
             </div>
 
             <div className="flex items-center space-x-8">
@@ -842,7 +844,9 @@ export default function HomePage() {
           >
             <div className="text-center mb-6">
               <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2 transition-colors duration-300">
-                {authMode === 'signin' ? 'Welcome Back' : 'Join Jurni'}
+                {authMode === 'signin'
+                  ? 'Welcome Back'
+                  : `Join ${process.env.NEXT_PUBLIC_APP_NAME}`}
               </h2>
               <p className="text-gray-600 dark:text-gray-300 transition-colors duration-300">
                 {authMode === 'signin'
