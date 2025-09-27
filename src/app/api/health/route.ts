@@ -1,9 +1,9 @@
 import { NextResponse } from 'next/server'
 
 export async function GET() {
-  return NextResponse.json({ 
-    status: 'ok', 
+  return NextResponse.json({
+    status: 'ok',
     message: 'CampShare API is running',
-    timestamp: new Date().toISOString()
+    timestamp: new Date().toISOString(),
   })
 }

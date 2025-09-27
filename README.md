@@ -25,17 +25,19 @@ A modern Next.js web application for sharing camping and outdoor adventure stori
 
 ### Prerequisites
 
-- Node.js 18+ 
+- Node.js 18+
 - npm or yarn
 
 ### Installation
 
 1. Install dependencies:
+
 ```bash
 npm install
 ```
 
 2. Create environment file:
+
 ```bash
 cp .env.example .env.local
 ```
@@ -43,6 +45,7 @@ cp .env.example .env.local
 3. Update environment variables in `.env.local`
 
 4. Run development server:
+
 ```bash
 npm run dev
 ```

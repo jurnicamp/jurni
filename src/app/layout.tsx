@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
+
 import './globals.css'
 import { Providers } from './providers'
 
@@ -7,12 +8,14 @@ const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
   title: 'CampShare - Share Your Adventure Stories',
-  description: 'Connect with fellow outdoor enthusiasts, discover new camping spots, and inspire others with your wilderness adventures.',
+  description:
+    'Connect with fellow outdoor enthusiasts, discover new camping spots, and inspire others with your wilderness adventures.',
   keywords: 'camping, outdoor, adventure, social media, hiking, nature, wilderness',
   authors: [{ name: 'CampShare Team' }],
   openGraph: {
     title: 'CampShare - Share Your Adventure Stories',
-    description: 'Connect with fellow outdoor enthusiasts, discover new camping spots, and inspire others with your wilderness adventures.',
+    description:
+      'Connect with fellow outdoor enthusiasts, discover new camping spots, and inspire others with your wilderness adventures.',
     type: 'website',
     locale: 'en_US',
     siteName: 'CampShare',
@@ -20,7 +23,8 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'CampShare - Share Your Adventure Stories',
-    description: 'Connect with fellow outdoor enthusiasts, discover new camping spots, and inspire others with your wilderness adventures.',
+    description:
+      'Connect with fellow outdoor enthusiasts, discover new camping spots, and inspire others with your wilderness adventures.',
   },
   robots: {
     index: true,
@@ -28,17 +32,11 @@ export const metadata: Metadata = {
   },
 }
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
       <body className={inter.className}>
-        <Providers>
-          {children}
-        </Providers>
+        <Providers>{children}</Providers>
       </body>
     </html>
   )
