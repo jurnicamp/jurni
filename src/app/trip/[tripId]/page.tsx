@@ -4,7 +4,7 @@ import { motion } from 'framer-motion'
 import { ArrowLeft, Heart, Share, Bookmark, MapPin, Clock, Users2 } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 
 import { CommentSection } from '@/components/CommentSection'
 
@@ -102,8 +102,8 @@ interface TripDetailPageProps {
 }
 
 export default function TripDetailPage({ params }: TripDetailPageProps) {
-  const [trip, setTrip] = useState<any>(null)
-  const [comments, setComments] = useState<any[]>([])
+  const [trip, setTrip] = useState(null)
+  const [comments, setComments] = useState([])
   const [loading, setLoading] = useState(true)
   const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0)
   const [isLiked, setIsLiked] = useState(false)
