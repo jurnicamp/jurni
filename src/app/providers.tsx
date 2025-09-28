@@ -4,7 +4,8 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { useState } from 'react'
 import { Toaster } from 'sonner'
 
-export function Providers({ children }: { children: any }) {
+export function Providers(props: any) {
+  const { children } = props
   const [queryClient] = useState(
     () =>
       new QueryClient({
