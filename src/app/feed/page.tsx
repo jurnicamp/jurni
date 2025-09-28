@@ -230,6 +230,39 @@ export default function FeedPage() {
   const [darkMode, setDarkMode] = useState(false)
   const [showWeather, setShowWeather] = useState(true)
 
+  // Map configuration
+  const mapCenter = { lat: 37.8651, lng: -119.5383 } // Yosemite coordinates
+  const mapZoom = 10
+  const mapMarkers = [
+    {
+      id: '1',
+      lat: 37.8651,
+      lng: -119.5383,
+      title: 'Yosemite Valley',
+      type: 'viewpoint' as const,
+      distance: 0,
+      elevation: 4000,
+    },
+    {
+      id: '2',
+      lat: 37.7308,
+      lng: -119.5583,
+      title: 'Half Dome Trail',
+      type: 'hiking' as const,
+      distance: 14,
+      elevation: 8836,
+    },
+    {
+      id: '3',
+      lat: 37.7851,
+      lng: -119.5083,
+      title: 'Camp 4',
+      type: 'camping' as const,
+      distance: 2,
+      elevation: 4000,
+    },
+  ]
+
   // Check if user is logged in, redirect to main page if not
   useEffect(() => {
     // Check localStorage for user data
@@ -528,7 +561,11 @@ export default function FeedPage() {
             />
 
             {/* Interactive Map */}
-            <InteractiveMap />
+            <InteractiveMap 
+              markers={mapMarkers}
+              center={mapCenter}
+              zoom={mapZoom}
+            />
           </div>
         </div>
       </main>
