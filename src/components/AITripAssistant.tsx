@@ -1,6 +1,6 @@
 import { motion, AnimatePresence } from 'framer-motion'
 import { Bot, MapPin, Clock, Cloud, AlertTriangle, Lightbulb } from 'lucide-react'
-import { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 
 interface TripSuggestion {
   id: string
@@ -153,7 +153,7 @@ export function AITripAssistant({ trip, isVisible, onClose }: AITripAssistantPro
               </div>
             ) : (
               <div className="space-y-4 max-h-96 overflow-y-auto">
-                {suggestions.map((suggestion, index) => (
+                {suggestions.map((suggestion: any, index: number) => (
                   <motion.div
                     key={suggestion.id}
                     className={`p-4 rounded-xl border transition-all duration-300 hover:shadow-lg ${

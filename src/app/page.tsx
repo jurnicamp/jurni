@@ -27,7 +27,7 @@ import {
 } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { useState, useEffect, useRef, useMemo, useCallback } from 'react'
+import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react'
 
 import { ActivityFeed } from '@/components/ActivityFeed'
 import { AdventureCard } from '@/components/AdventureCard'
@@ -643,8 +643,8 @@ export default function HomePage() {
   }, [])
 
   const handleActivityLike = useCallback((activityId: string) => {
-    setActivities(prevActivities =>
-      prevActivities.map(activity => {
+    setActivities((prevActivities: any[]) =>
+      prevActivities.map((activity: any) => {
         if (activity.id === activityId && 'likes' in activity && 'isLiked' in activity) {
           // TypeScript now knows this activity has likes/isLiked properties
           return {
@@ -662,8 +662,8 @@ export default function HomePage() {
     // Simulate API call
     await new Promise(resolve => setTimeout(resolve, 300))
     
-    setActivities(prevActivities =>
-      prevActivities.map(activity =>
+    setActivities((prevActivities: any[]) =>
+      prevActivities.map((activity: any) =>
         activity.user.id === _userId
           ? { ...activity, user: { ...activity.user, isFollowing: !_isFollowing } }
           : activity

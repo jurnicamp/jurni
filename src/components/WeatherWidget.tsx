@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion'
 import { Cloud, Sun, CloudRain, CloudSnow, Wind, Eye, Droplets } from 'lucide-react'
-import { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 
 interface WeatherData {
   temperature: number

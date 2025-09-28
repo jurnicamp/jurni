@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion'
 import { UserPlus, UserMinus, Users } from 'lucide-react'
-import { useState } from 'react'
+import React, { useState } from 'react'
 
 interface FollowButtonProps {
   userId: string

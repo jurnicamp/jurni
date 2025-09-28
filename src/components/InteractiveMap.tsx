@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion'
 import { Layers, Satellite, Mountain } from 'lucide-react'
-import { useState, useRef } from 'react'
+import React, { useState, useRef } from 'react'
 
 interface MapMarker {
   id: string

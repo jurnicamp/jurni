@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion'
 import { Heart, MessageCircle, MapPin, Camera, Clock, Users2, Star, Bookmark } from 'lucide-react'
 import Image from 'next/image'
-import { useState } from 'react'
+import React, { useState } from 'react'
 
 interface AdventureCardProps {
   trip: {
@@ -104,7 +104,7 @@ export function AdventureCard({ trip, index, onLike, onSave, onTripClick }: Adve
               transition={{ delay: 0.4 }}
             >
               <motion.button
-                onClick={(e) => {
+                onClick={(e: React.MouseEvent) => {
                   e.stopPropagation()
                   onSave?.(trip.id)
                 }}
@@ -146,7 +146,7 @@ export function AdventureCard({ trip, index, onLike, onSave, onTripClick }: Adve
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.5 }}
-          onClick={(e) => {
+          onClick={(e: React.MouseEvent) => {
             e.stopPropagation()
             window.location.href = `/profile/${trip.user.id}`
           }}
@@ -270,10 +270,10 @@ export function AdventureCard({ trip, index, onLike, onSave, onTripClick }: Adve
         >
           <div className="flex items-center space-x-6 text-sm text-gray-500 dark:text-gray-400">
             <motion.button
-              onClick={(e) => {
-                e.stopPropagation()
-                onLike?.(trip.id)
-              }}
+                onClick={(e: React.MouseEvent) => {
+                  e.stopPropagation()
+                  onLike?.(trip.id)
+                }}
               className={`flex items-center transition-all duration-300 ${
                 trip.isLiked
                   ? 'text-red-500 dark:text-red-400'
