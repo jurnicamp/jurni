@@ -2,7 +2,6 @@
 
 import { motion, useScroll, useTransform, useInView } from 'framer-motion'
 import {
-  Camera,
   Users,
   MapPin,
   Plus,
@@ -22,7 +21,6 @@ import {
   ArrowRight,
   Sparkles,
   Bot,
-  Mic,
   Cloud,
 } from 'lucide-react'
 import Image from 'next/image'

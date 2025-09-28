@@ -1,10 +1,12 @@
 'use client'
 
 import { motion, AnimatePresence } from 'framer-motion'
-import { Heart, MessageCircle, Camera, MapPin, UserPlus, Award, TrendingUp, Calendar } from 'lucide-react'
+import { Heart, MessageCircle, MapPin, UserPlus, Award, TrendingUp } from 'lucide-react'
+
 import Image from 'next/image'
 import Link from 'next/link'
 import { useState } from 'react'
+
 import { FollowButton } from './FollowButton'
 
 interface User {
@@ -39,9 +41,9 @@ interface ActivityItem {
 
 interface ActivityFeedProps {
   activities: ActivityItem[]
-  onLike?: (activityId: string) => void
-  onFollow?: (userId: string, isFollowing: boolean) => void
-  onTripClick?: (tripId: string) => void
+  onLike?: (_activityId: string) => void
+  onFollow?: (_userId: string, _isFollowing: boolean) => void
+  onTripClick?: (_tripId: string) => void
   currentUserId?: string
 }
 
@@ -75,7 +77,7 @@ export function ActivityFeed({
   const getActivityIcon = (type: string) => {
     switch (type) {
       case 'trip':
-        return <Camera className="w-5 h-5 text-emerald-500" />
+        return <MapPin className="w-5 h-5 text-emerald-500" />
       case 'follow':
         return <UserPlus className="w-5 h-5 text-blue-500" />
       case 'like':

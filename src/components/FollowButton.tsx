@@ -7,7 +7,7 @@ import { useState } from 'react'
 interface FollowButtonProps {
   userId: string
   isFollowing: boolean
-  onFollow: (userId: string, isFollowing: boolean) => void
+  onFollow: (_userId: string, _isFollowing: boolean) => void
   variant?: 'default' | 'compact' | 'icon'
   size?: 'sm' | 'md' | 'lg'
   disabled?: boolean
