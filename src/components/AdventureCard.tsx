@@ -14,8 +14,14 @@ interface AdventureCardProps {
     comments: number
     timestamp: Date
     user: {
+      id: string
       name: string
-      avatar: string
+      email: string
+      avatar?: string
+      bio?: string
+      followers?: number
+      following?: number
+      trips?: number
     }
     photos: Array<{ url: string }>
     duration?: string
