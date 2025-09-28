@@ -20,7 +20,7 @@ interface InteractiveMapProps {
   onMarkerClick?: (_marker: MapMarker) => void
 }
 
-export function InteractiveMap({ markers, center, _zoom, onMarkerClick }: InteractiveMapProps) {
+export function InteractiveMap({ markers, center, zoom, onMarkerClick }: InteractiveMapProps) {
   const [selectedMarker, setSelectedMarker] = useState<MapMarker | null>(null)
   const [mapType, setMapType] = useState<'satellite' | 'terrain' | 'road'>('satellite')
   const mapRef = useRef<HTMLDivElement>(null)

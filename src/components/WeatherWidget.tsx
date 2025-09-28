@@ -183,7 +183,7 @@ export function WeatherWidget({ location, isVisible, onClose }: WeatherWidgetPro
                 Hourly Forecast
               </h5>
               <div className="flex space-x-4 overflow-x-auto pb-2">
-                {weather.hourly.map((hour, index) => {
+                {weather.hourly.map((hour: any, index: number) => {
                   const Icon = getWeatherIcon(hour.condition)
                   return (
                     <motion.div
@@ -209,7 +209,7 @@ export function WeatherWidget({ location, isVisible, onClose }: WeatherWidgetPro
                 <h5 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
                   Weather Alerts
                 </h5>
-                {weather.alerts.map((alert, index) => (
+                {weather.alerts.map((alert: any, index: number) => (
                   <motion.div
                     key={index}
                     className={`p-4 rounded-lg border-l-4 ${

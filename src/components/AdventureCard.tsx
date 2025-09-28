@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion'
-import { Heart, MessageCircle, MapPin, Camera, Clock, Users2, Star } from 'lucide-react'
+import { Heart, MessageCircle, MapPin, Camera, Clock, Users2, Star, Bookmark } from 'lucide-react'
 import Image from 'next/image'
 import { useState } from 'react'
 
@@ -72,6 +72,8 @@ export function AdventureCard({ trip, index, onLike, onSave }: AdventureCardProp
                 isHovered ? 'scale-110' : 'scale-100'
               }`}
               onLoad={() => setImageLoaded(true)}
+              loading="lazy"
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             />
             
             {/* Loading overlay */}
@@ -131,7 +133,7 @@ export function AdventureCard({ trip, index, onLike, onSave }: AdventureCardProp
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
               >
-                <Heart className="w-4 h-4" />
+                <Bookmark className={`w-4 h-4 ${trip.isSaved ? 'fill-current' : ''}`} />
               </motion.button>
               <motion.button
                 className="p-2 bg-white/80 dark:bg-gray-800/80 text-gray-600 dark:text-gray-300 rounded-full backdrop-blur-sm hover:bg-white dark:hover:bg-gray-800 transition-all duration-300"

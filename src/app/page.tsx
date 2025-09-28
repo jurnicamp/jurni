@@ -26,7 +26,7 @@ import {
   Cloud,
 } from 'lucide-react'
 import Image from 'next/image'
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useMemo, useCallback } from 'react'
 
 import { AdventureCard } from '@/components/AdventureCard'
 import { AITripAssistant } from '@/components/AITripAssistant'
@@ -375,7 +375,7 @@ export default function HomePage() {
   const [showVoiceSearch, setShowVoiceSearch] = useState(false)
   const [showWeather, setShowWeather] = useState(false)
   const [showMap, setShowMap] = useState(false)
-  const [selectedTrip, _setSelectedTrip] = useState<Trip | null>(null)
+  const [selectedTrip, setSelectedTrip] = useState<Trip | null>(null)
 
   // Map markers for interactive map
   const mapMarkers: Array<{
@@ -470,6 +470,22 @@ export default function HomePage() {
     }
   }, [])
 
+  // Handle ESC key to close modals
+  useEffect(() => {
+    const handleEscKey = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        if (showAuthModal) setShowAuthModal(false)
+        if (showAIAssistant) setShowAIAssistant(false)
+        if (showVoiceSearch) setShowVoiceSearch(false)
+        if (showWeather) setShowWeather(false)
+        if (showMap) setShowMap(false)
+      }
+    }
+
+    document.addEventListener('keydown', handleEscKey)
+    return () => document.removeEventListener('keydown', handleEscKey)
+  }, [showAuthModal, showAIAssistant, showVoiceSearch, showWeather, showMap])
+
   // Save user to localStorage when it changes
   useEffect(() => {
     if (user) {
@@ -504,7 +520,7 @@ export default function HomePage() {
     return num.toString()
   }
 
-  const handleAuth = (e: React.FormEvent) => {
+  const handleAuth = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
     if (authMode === 'signin') {
@@ -533,9 +549,9 @@ export default function HomePage() {
     setUser(null)
   }
 
-  const toggleLike = (tripId: string) => {
-    setTrips(prevTrips =>
-      prevTrips.map(trip =>
+  const toggleLike = useCallback((tripId: string) => {
+    setTrips((prevTrips: Trip[]) =>
+      prevTrips.map((trip: Trip) =>
         trip.id === tripId
           ? {
               ...trip,
@@ -545,38 +561,40 @@ export default function HomePage() {
           : trip
       )
     )
-  }
+  }, [])
 
-  const toggleSave = (tripId: string) => {
-    setTrips(prevTrips =>
-      prevTrips.map(trip => (trip.id === tripId ? { ...trip, isSaved: !trip.isSaved } : trip))
+  const toggleSave = useCallback((tripId: string) => {
+    setTrips((prevTrips: Trip[]) =>
+      prevTrips.map((trip: Trip) => (trip.id === tripId ? { ...trip, isSaved: !trip.isSaved } : trip))
     )
-  }
+  }, [])
 
-  const filteredAndSortedTrips = trips
-    .filter(trip => {
-      const matchesSearch =
-        trip.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        trip.location.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        trip.tags?.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()))
-      const matchesDifficulty = filterDifficulty === 'all' || trip.difficulty === filterDifficulty
-      return matchesSearch && matchesDifficulty
-    })
-    .sort((a, b) => {
-      switch (sortBy) {
-        case 'popular':
-          return b.likes - a.likes
-        case 'distance':
-          return (a.distance || 0) - (b.distance || 0)
-        case 'recent':
-        default:
-          return b.timestamp.getTime() - a.timestamp.getTime()
-      }
-    })
+  const filteredAndSortedTrips = useMemo(() => {
+    return trips
+      .filter((trip: Trip) => {
+        const matchesSearch =
+          trip.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          trip.location.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          trip.tags?.some((tag: string) => tag.toLowerCase().includes(searchQuery.toLowerCase()))
+        const matchesDifficulty = filterDifficulty === 'all' || trip.difficulty === filterDifficulty
+        return matchesSearch && matchesDifficulty
+      })
+      .sort((a: Trip, b: Trip) => {
+        switch (sortBy) {
+          case 'popular':
+            return b.likes - a.likes
+          case 'distance':
+            return (a.distance || 0) - (b.distance || 0)
+          case 'recent':
+          default:
+            return b.timestamp.getTime() - a.timestamp.getTime()
+        }
+      })
+  }, [trips, searchQuery, filterDifficulty, sortBy])
 
-  const handleVoiceSearch = (query: string) => {
+  const handleVoiceSearch = useCallback((query: string) => {
     setSearchQuery(query)
-  }
+  }, [])
 
   const handleMarkerClick = (_marker: any) => {
     // Handle map marker click
@@ -607,7 +625,7 @@ export default function HomePage() {
                 <TreePine className="w-5 h-5 text-white" />
               </motion.div>
               <span className="text-2xl font-bold text-white">
-                {process.env.NEXT_PUBLIC_APP_NAME}
+                {process.env.NEXT_PUBLIC_APP_NAME || 'Jurni'}
               </span>
             </motion.div>
 
@@ -619,7 +637,7 @@ export default function HomePage() {
                   type="text"
                   placeholder="Search adventures or ask AI..."
                   value={searchQuery}
-                  onChange={e => setSearchQuery(e.target.value)}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchQuery(e.target.value)}
                   className="w-full pl-10 pr-12 py-2 border border-white/20 rounded-lg focus:ring-2 focus:ring-emerald-400 focus:border-transparent bg-white/10 backdrop-blur-sm text-white placeholder-gray-300 transition-all duration-300 hover:bg-white/20"
                 />
                 <motion.button
@@ -668,12 +686,12 @@ export default function HomePage() {
                   </div>
                   <motion.button
                     onClick={handleLogout}
-                    className="bg-white/10 hover:bg-white/20 px-4 py-2 rounded-lg text-sm font-medium text-white transition-colors duration-300 flex items-center"
+                    className="bg-white/10 hover:bg-white/20 px-3 sm:px-4 py-2 rounded-lg text-sm font-medium text-white transition-colors duration-300 flex items-center"
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                   >
-                    <LogOut className="w-4 h-4 mr-2" />
-                    Sign Out
+                    <LogOut className="w-4 h-4 sm:mr-2" />
+                    <span className="hidden sm:inline">Sign Out</span>
                   </motion.button>
                 </>
               ) : (
@@ -693,11 +711,12 @@ export default function HomePage() {
                       setAuthMode('signup')
                       setShowAuthModal(true)
                     }}
-                    className="bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600 text-white px-4 py-2 rounded-lg font-medium transition-all duration-300 shadow-lg hover:shadow-xl"
+                    className="bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600 text-white px-3 sm:px-4 py-2 rounded-lg font-medium transition-all duration-300 shadow-lg hover:shadow-xl"
                     whileHover={{ scale: 1.05, y: -2 }}
                     whileTap={{ scale: 0.95 }}
                   >
-                    Sign Up
+                    <span className="hidden sm:inline">Sign Up</span>
+                    <span className="sm:hidden">Join</span>
                   </motion.button>
                 </>
               )}
@@ -719,9 +738,17 @@ export default function HomePage() {
             type="text"
             placeholder="Search adventures..."
             value={searchQuery}
-            onChange={e => setSearchQuery(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 border border-white/20 rounded-lg focus:ring-2 focus:ring-emerald-400 focus:border-transparent bg-white/10 backdrop-blur-sm text-white placeholder-gray-300 transition-all duration-300 hover:bg-white/20"
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchQuery(e.target.value)}
+            className="w-full pl-10 pr-12 py-2 border border-white/20 rounded-lg focus:ring-2 focus:ring-emerald-400 focus:border-transparent bg-white/10 backdrop-blur-sm text-white placeholder-gray-300 transition-all duration-300 hover:bg-white/20"
           />
+          <motion.button
+            onClick={() => setShowVoiceSearch(true)}
+            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-300 hover:text-emerald-400 transition-colors"
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+          >
+            <Mic className="w-4 h-4" />
+          </motion.button>
         </div>
       </motion.div>
 
@@ -737,7 +764,7 @@ export default function HomePage() {
             <Filter className="w-4 h-4 text-gray-300" />
             <select
               value={filterDifficulty}
-              onChange={e => setFilterDifficulty(e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setFilterDifficulty(e.target.value)}
               className="border border-white/20 rounded-lg px-3 py-1 text-sm focus:ring-2 focus:ring-emerald-400 focus:border-transparent bg-white/10 backdrop-blur-sm text-white transition-all duration-300 hover:bg-white/20"
             >
               <option value="all">All Difficulty</option>
@@ -751,7 +778,7 @@ export default function HomePage() {
             <SortAsc className="w-4 h-4 text-gray-300" />
             <select
               value={sortBy}
-              onChange={e => setSortBy(e.target.value as 'recent' | 'popular' | 'distance')}
+              onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSortBy(e.target.value as 'recent' | 'popular' | 'distance')}
               className="border border-white/20 rounded-lg px-3 py-1 text-sm focus:ring-2 focus:ring-emerald-400 focus:border-transparent bg-white/10 backdrop-blur-sm text-white transition-all duration-300 hover:bg-white/20"
             >
               <option value="recent">Most Recent</option>
@@ -763,32 +790,32 @@ export default function HomePage() {
           {/* New AI and Weather buttons */}
           <motion.button
             onClick={() => setShowAIAssistant(true)}
-            className="flex items-center space-x-2 px-3 py-1 bg-purple-500/20 hover:bg-purple-500/30 text-purple-300 rounded-lg transition-all duration-300"
+            className="flex items-center space-x-1 sm:space-x-2 px-2 sm:px-3 py-1 bg-purple-500/20 hover:bg-purple-500/30 text-purple-300 rounded-lg transition-all duration-300"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
             <Bot className="w-4 h-4" />
-            <span className="text-sm">AI Assistant</span>
+            <span className="text-xs sm:text-sm hidden xs:inline">AI Assistant</span>
           </motion.button>
 
           <motion.button
             onClick={() => setShowWeather(true)}
-            className="flex items-center space-x-2 px-3 py-1 bg-blue-500/20 hover:bg-blue-500/30 text-blue-300 rounded-lg transition-all duration-300"
+            className="flex items-center space-x-1 sm:space-x-2 px-2 sm:px-3 py-1 bg-blue-500/20 hover:bg-blue-500/30 text-blue-300 rounded-lg transition-all duration-300"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
             <Cloud className="w-4 h-4" />
-            <span className="text-sm">Weather</span>
+            <span className="text-xs sm:text-sm hidden xs:inline">Weather</span>
           </motion.button>
 
           <motion.button
             onClick={() => setShowMap(true)}
-            className="flex items-center space-x-2 px-3 py-1 bg-green-500/20 hover:bg-green-500/30 text-green-300 rounded-lg transition-all duration-300"
+            className="flex items-center space-x-1 sm:space-x-2 px-2 sm:px-3 py-1 bg-green-500/20 hover:bg-green-500/30 text-green-300 rounded-lg transition-all duration-300"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
             <MapPin className="w-4 h-4" />
-            <span className="text-sm">Map</span>
+            <span className="text-xs sm:text-sm hidden xs:inline">Map</span>
           </motion.button>
         </div>
       </motion.div>
@@ -1154,7 +1181,7 @@ export default function HomePage() {
             </motion.div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {filteredAndSortedTrips.map((trip, index) => (
+              {filteredAndSortedTrips.map((trip: Trip, index: number) => (
                 <motion.div
                   key={trip.id}
                   initial={{ opacity: 0, y: 30 }}
@@ -1243,7 +1270,7 @@ export default function HomePage() {
               viewport={{ once: true }}
             >
               <TreePine className="w-6 h-6" />
-              <span className="text-xl font-bold">{process.env.NEXT_PUBLIC_APP_NAME}</span>
+              <span className="text-xl font-bold">{process.env.NEXT_PUBLIC_APP_NAME || 'Jurni'}</span>
             </motion.div>
 
             <motion.div
@@ -1279,7 +1306,7 @@ export default function HomePage() {
               <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-2 transition-colors duration-300">
                 {authMode === 'signin'
                   ? 'Welcome Back'
-                  : `Join ${process.env.NEXT_PUBLIC_APP_NAME}`}
+                  : `Join ${process.env.NEXT_PUBLIC_APP_NAME || 'Jurni'}`}
               </h2>
               <p className="text-gray-600 dark:text-gray-300 transition-colors duration-300">
                 {authMode === 'signin'
@@ -1298,7 +1325,7 @@ export default function HomePage() {
                     type="text"
                     required
                     value={authForm.name}
-                    onChange={e => setAuthForm(prev => ({ ...prev, name: e.target.value }))}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setAuthForm((prev: any) => ({ ...prev, name: e.target.value }))}
                     className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white transition-colors duration-300"
                     placeholder="Your name"
                   />
@@ -1313,7 +1340,7 @@ export default function HomePage() {
                   type="email"
                   required
                   value={authForm.email}
-                  onChange={e => setAuthForm(prev => ({ ...prev, email: e.target.value }))}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setAuthForm((prev: any) => ({ ...prev, email: e.target.value }))}
                   className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white transition-colors duration-300"
                   placeholder="your@email.com"
                 />
@@ -1327,7 +1354,7 @@ export default function HomePage() {
                   type="password"
                   required
                   value={authForm.password}
-                  onChange={e => setAuthForm(prev => ({ ...prev, password: e.target.value }))}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setAuthForm((prev: any) => ({ ...prev, password: e.target.value }))}
                   className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white transition-colors duration-300"
                   placeholder="••••••••"
                 />
@@ -1367,19 +1394,17 @@ export default function HomePage() {
       )}
 
       {/* AI Trip Assistant Modal */}
-      {selectedTrip && (
-        <AITripAssistant
-          trip={{
-            location: selectedTrip.location,
-            difficulty: selectedTrip.difficulty,
-            duration: selectedTrip.duration || '1 day',
-            season: selectedTrip.season || 'Spring',
-            distance: selectedTrip.distance || 0
-          }}
-          isVisible={showAIAssistant}
-          onClose={() => setShowAIAssistant(false)}
-        />
-      )}
+      <AITripAssistant
+        trip={{
+          location: selectedTrip?.location || 'Yosemite National Park, CA',
+          difficulty: selectedTrip?.difficulty || 'moderate',
+          duration: selectedTrip?.duration || '1 day',
+          season: selectedTrip?.season || 'Spring',
+          distance: selectedTrip?.distance || 0
+        }}
+        isVisible={showAIAssistant}
+        onClose={() => setShowAIAssistant(false)}
+      />
 
       {/* Voice Search Modal */}
       <VoiceSearch
@@ -1395,20 +1420,32 @@ export default function HomePage() {
         onClose={() => setShowWeather(false)}
       />
 
-      {/* Interactive Map - only show when showMap is true */}
+      {/* Interactive Map Modal */}
       {showMap && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="bg-white dark:bg-gray-900 rounded-2xl p-6 w-full max-w-4xl max-h-[80vh] overflow-hidden">
+        <motion.div
+          className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+        >
+          <motion.div
+            className="bg-white dark:bg-gray-900 rounded-2xl p-6 w-full max-w-4xl max-h-[80vh] overflow-hidden"
+            initial={{ opacity: 0, scale: 0.9, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.9, y: 20 }}
+          >
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-2xl font-bold text-gray-900 dark:text-white">
                 Interactive Map
               </h3>
-              <button
+              <motion.button
                 onClick={() => setShowMap(false)}
                 className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
               >
                 ✕
-              </button>
+              </motion.button>
             </div>
             <InteractiveMap
               markers={mapMarkers}
@@ -1416,8 +1453,8 @@ export default function HomePage() {
               zoom={10}
               onMarkerClick={handleMarkerClick}
             />
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
       )}
     </div>
   )

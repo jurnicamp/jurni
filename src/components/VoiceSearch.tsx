@@ -13,11 +13,13 @@ export function VoiceSearch({ onSearch, isOpen, onClose }: VoiceSearchProps) {
   const [transcript, setTranscript] = useState('')
   const [isProcessing, setIsProcessing] = useState(false)
   const [isMuted, setIsMuted] = useState(false)
+  const [isSupported, setIsSupported] = useState(false)
   const recognitionRef = useRef<any>(null)
 
   useEffect(() => {
-    if (typeof window !== 'undefined' && 'webkitSpeechRecognition' in window) {
-      const SpeechRecognition = (window as any).webkitSpeechRecognition
+    if (typeof window !== 'undefined' && ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window)) {
+      setIsSupported(true)
+      const SpeechRecognition = (window as any).webkitSpeechRecognition || (window as any).SpeechRecognition
       recognitionRef.current = new SpeechRecognition()
       recognitionRef.current.continuous = false
       recognitionRef.current.interimResults = true
@@ -40,6 +42,19 @@ export function VoiceSearch({ onSearch, isOpen, onClose }: VoiceSearchProps) {
           }, 1000)
         }
       }
+
+      recognitionRef.current.onerror = (event: any) => {
+        console.error('Speech recognition error:', event.error)
+        setIsListening(false)
+        setTranscript('')
+      }
+
+      recognitionRef.current.onnomatch = () => {
+        console.log('No speech was recognized')
+        setIsListening(false)
+      }
+    } else {
+      setIsSupported(false)
     }
   }, [transcript, onSearch, onClose])
 
@@ -141,32 +156,48 @@ export function VoiceSearch({ onSearch, isOpen, onClose }: VoiceSearchProps) {
 
             {/* Controls */}
             <div className="flex items-center justify-center space-x-4">
-              <motion.button
-                className={`p-4 rounded-full transition-all duration-300 ${
-                  isListening 
-                    ? 'bg-red-500 hover:bg-red-600 text-white' 
-                    : 'bg-emerald-500 hover:bg-emerald-600 text-white'
-                }`}
-                onClick={isListening ? stopListening : startListening}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                disabled={isProcessing}
-              >
-                {isListening ? <MicOff className="w-6 h-6" /> : <Mic className="w-6 h-6" />}
-              </motion.button>
+              {!isSupported ? (
+                <div className="text-center">
+                  <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
+                    Voice search is not supported in your browser. Please use Chrome, Safari, or Edge.
+                  </p>
+                  <motion.button
+                    className="p-4 rounded-full bg-gray-400 text-white cursor-not-allowed"
+                    whileHover={{ scale: 1.02 }}
+                  >
+                    <MicOff className="w-6 h-6" />
+                  </motion.button>
+                </div>
+              ) : (
+                <motion.button
+                  className={`p-4 rounded-full transition-all duration-300 ${
+                    isListening 
+                      ? 'bg-red-500 hover:bg-red-600 text-white' 
+                      : 'bg-emerald-500 hover:bg-emerald-600 text-white'
+                  }`}
+                  onClick={isListening ? stopListening : startListening}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  disabled={isProcessing}
+                >
+                  {isListening ? <MicOff className="w-6 h-6" /> : <Mic className="w-6 h-6" />}
+                </motion.button>
+              )}
 
-              <motion.button
-                className={`p-4 rounded-full transition-all duration-300 ${
-                  isMuted 
-                    ? 'bg-gray-500 hover:bg-gray-600 text-white' 
-                    : 'bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300'
-                }`}
-                onClick={toggleMute}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                {isMuted ? <VolumeX className="w-6 h-6" /> : <Volume2 className="w-6 h-6" />}
-              </motion.button>
+              {isSupported && (
+                <motion.button
+                  className={`p-4 rounded-full transition-all duration-300 ${
+                    isMuted 
+                      ? 'bg-gray-500 hover:bg-gray-600 text-white' 
+                      : 'bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300'
+                  }`}
+                  onClick={toggleMute}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  {isMuted ? <VolumeX className="w-6 h-6" /> : <Volume2 className="w-6 h-6" />}
+                </motion.button>
+              )}
             </div>
 
             {/* Examples */}
