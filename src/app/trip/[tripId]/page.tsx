@@ -1,7 +1,7 @@
 'use client'
 
-import { motion, AnimatePresence } from 'framer-motion'
-import { ArrowLeft, Heart, MessageCircle, Share, Bookmark, MapPin, Clock, Users2, Camera, Send } from 'lucide-react'
+import { motion } from 'framer-motion'
+import { ArrowLeft, Heart, Share, Bookmark, MapPin, Clock, Users2 } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useState, useEffect } from 'react'

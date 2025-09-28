@@ -2,7 +2,6 @@
 
 import { motion, AnimatePresence } from 'framer-motion'
 import { Heart, MessageCircle, MapPin, UserPlus, Award, TrendingUp } from 'lucide-react'
-
 import Image from 'next/image'
 import Link from 'next/link'
 import { useState } from 'react'

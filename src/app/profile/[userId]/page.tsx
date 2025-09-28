@@ -1,7 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { ArrowLeft, Camera, MapPin, Calendar, Users, Heart, MessageCircle } from 'lucide-react'
+import { ArrowLeft, Camera, MapPin, Calendar, Heart, MessageCircle } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useState, useEffect } from 'react'

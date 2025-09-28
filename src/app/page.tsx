@@ -22,6 +22,8 @@ import {
   Sparkles,
   Bot,
   Cloud,
+  Mic,
+  Camera,
 } from 'lucide-react'
 import Image from 'next/image'
 import { useState, useEffect, useRef, useMemo, useCallback } from 'react'
