@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion'
-import { MapPin, Layers, Satellite, Terrain } from 'lucide-react'
+import { MapPin, Layers, Satellite, Mountain } from 'lucide-react'
 import { useState, useRef } from 'react'
 
 interface MapMarker {
@@ -22,190 +22,166 @@ interface InteractiveMapProps {
 
 export function InteractiveMap({ markers, center, _zoom, onMarkerClick }: InteractiveMapProps) {
   const [selectedMarker, setSelectedMarker] = useState<MapMarker | null>(null)
-  const [_mapType, setMapType] = useState<'satellite' | 'terrain' | 'hybrid'>('satellite')
-  const [is3DMode, setIs3DMode] = useState(false)
+  const [mapType, setMapType] = useState<'satellite' | 'terrain' | 'road'>('satellite')
   const mapRef = useRef<HTMLDivElement>(null)
 
   const getMarkerColor = (type: string) => {
     switch (type) {
-      case 'camping': return 'text-green-500'
-      case 'hiking': return 'text-blue-500'
-      case 'viewpoint': return 'text-purple-500'
-      case 'danger': return 'text-red-500'
-      default: return 'text-gray-500'
+      case 'camping': return 'bg-emerald-500'
+      case 'hiking': return 'bg-blue-500'
+      case 'viewpoint': return 'bg-purple-500'
+      case 'danger': return 'bg-red-500'
+      default: return 'bg-gray-500'
     }
   }
 
-  const getDifficultyColor = (difficulty: string) => {
+  const getDifficultyIcon = (difficulty: string) => {
     switch (difficulty) {
-      case 'easy': return 'bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-200'
-      case 'moderate': return 'bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-200'
-      case 'hard': return 'bg-red-100 text-red-800 dark:bg-red-900/50 dark:text-red-200'
-      default: return 'bg-gray-100 text-gray-800 dark:bg-gray-900/50 dark:text-gray-200'
+      case 'easy': return '🟢'
+      case 'moderate': return '🟡'
+      case 'hard': return '🔴'
+      default: return '⚪'
     }
   }
 
   return (
-    <div className="relative w-full h-96 rounded-2xl overflow-hidden bg-gray-100 dark:bg-gray-800">
+    <div className="relative w-full h-full bg-gray-100 dark:bg-gray-800 rounded-lg overflow-hidden">
+      {/* Map Controls */}
+      <div className="absolute top-4 left-4 z-10 flex flex-col space-y-2">
+        <motion.button
+          onClick={() => setMapType('satellite')}
+          className={`p-2 rounded-lg backdrop-blur-sm transition-all duration-300 ${
+            mapType === 'satellite'
+              ? 'bg-blue-500 text-white shadow-lg'
+              : 'bg-white/80 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-blue-500 hover:text-white'
+          }`}
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+        >
+          <Satellite className="w-4 h-4" />
+        </motion.button>
+        
+        <motion.button
+          onClick={() => setMapType('terrain')}
+          className={`p-2 rounded-lg backdrop-blur-sm transition-all duration-300 ${
+            mapType === 'terrain'
+              ? 'bg-green-500 text-white shadow-lg'
+              : 'bg-white/80 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-green-500 hover:text-white'
+          }`}
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+        >
+          <Mountain className="w-4 h-4" />
+        </motion.button>
+        
+        <motion.button
+          onClick={() => setMapType('road')}
+          className={`p-2 rounded-lg backdrop-blur-sm transition-all duration-300 ${
+            mapType === 'road'
+              ? 'bg-gray-500 text-white shadow-lg'
+              : 'bg-white/80 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-500 hover:text-white'
+          }`}
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+        >
+          <Layers className="w-4 h-4" />
+        </motion.button>
+      </div>
+
       {/* Map Container */}
-      <div ref={mapRef} className="w-full h-full relative">
-        {/* Mock 3D Map Background */}
-        <div className="absolute inset-0 bg-gradient-to-br from-green-400 via-blue-500 to-purple-600">
-          <div className="absolute inset-0 bg-black/20"></div>
-          
-          {/* 3D Terrain Effect */}
-          <div className="absolute inset-0">
-            {Array.from({ length: 20 }).map((_, i) => (
-              <motion.div
-                key={i}
-                className="absolute w-32 h-32 bg-white/10 rounded-full"
-                style={{
-                  left: `${Math.random() * 100}%`,
-                  top: `${Math.random() * 100}%`,
-                }}
-                animate={{
-                  scale: [1, 1.2, 1],
-                  opacity: [0.1, 0.3, 0.1],
-                }}
-                transition={{
-                  duration: 3 + Math.random() * 2,
-                  repeat: Infinity,
-                  delay: Math.random() * 2,
-                }}
-              />
-            ))}
-          </div>
+      <div ref={mapRef} className="relative w-full h-full">
+        {/* 3D Terrain Effect */}
+        <div className="absolute inset-0 bg-gradient-to-br from-emerald-200 via-blue-200 to-purple-200 dark:from-emerald-900 dark:via-blue-900 dark:to-purple-900">
+          <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%239C92AC" fill-opacity="0.1"%3E%3Ccircle cx="30" cy="30" r="2"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-20"></div>
+        </div>
 
-          {/* Markers */}
-          {markers.map((marker, index) => (
+        {/* Map Markers */}
+        {markers.map((marker, index) => (
+          <motion.div
+            key={marker.id}
+            className="absolute transform -translate-x-1/2 -translate-y-1/2 cursor-pointer"
+            style={{
+              left: `${50 + (marker.lng - center.lng) * 100}%`,
+              top: `${50 - (marker.lat - center.lat) * 100}%`,
+            }}
+            initial={{ opacity: 0, scale: 0 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.5, delay: index * 0.1 }}
+            whileHover={{ scale: 1.2 }}
+            onClick={() => {
+              setSelectedMarker(marker)
+              onMarkerClick?.(marker)
+            }}
+          >
+            <div className={`w-6 h-6 rounded-full ${getMarkerColor(marker.type)} shadow-lg border-2 border-white dark:border-gray-800 flex items-center justify-center text-white text-xs font-bold`}>
+              {getDifficultyIcon(marker.difficulty)}
+            </div>
+            
+            {/* Marker Label */}
             <motion.div
-              key={marker.id}
-              className="absolute cursor-pointer group"
-              style={{
-                left: `${50 + (marker.lng - center.lng) * 100}%`,
-                top: `${50 + (marker.lat - center.lat) * 100}%`,
-              }}
-              initial={{ opacity: 0, scale: 0 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: index * 0.1 }}
-              whileHover={{ scale: 1.2 }}
-              onClick={() => {
-                setSelectedMarker(marker)
-                onMarkerClick?.(marker)
-              }}
+              className="absolute top-8 left-1/2 transform -translate-x-1/2 bg-white dark:bg-gray-800 text-gray-900 dark:text-white px-2 py-1 rounded text-xs font-medium shadow-lg whitespace-nowrap"
+              initial={{ opacity: 0, y: -10 }}
+              whileHover={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.2 }}
             >
-              <div className={`relative ${getMarkerColor(marker.type)}`}>
-                <MapPin className="w-6 h-6 drop-shadow-lg" />
-                <div className="absolute -top-1 -right-1 w-3 h-3 bg-white rounded-full border-2 border-current"></div>
-              </div>
-              
-              {/* Marker Label */}
-              <motion.div
-                className="absolute top-8 left-1/2 transform -translate-x-1/2 bg-white dark:bg-gray-800 rounded-lg px-3 py-1 shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap"
-                initial={{ y: -10 }}
-                whileHover={{ y: 0 }}
-              >
-                <p className="text-sm font-medium text-gray-900 dark:text-white">
-                  {marker.title}
-                </p>
-                <div className="flex items-center space-x-2 mt-1">
-                  <span className={`px-2 py-1 text-xs rounded-full ${getDifficultyColor(marker.difficulty)}`}>
-                    {marker.difficulty}
-                  </span>
-                  {marker.distance && (
-                    <span className="text-xs text-gray-500">
-                      {marker.distance}mi
-                    </span>
-                  )}
-                </div>
-              </motion.div>
+              {marker.title}
             </motion.div>
-          ))}
-        </div>
+          </motion.div>
+        ))}
 
-        {/* Map Controls */}
-        <div className="absolute top-4 right-4 flex flex-col space-y-2">
-          <motion.button
-            className="p-2 bg-white/90 dark:bg-gray-800/90 rounded-lg shadow-lg hover:bg-white dark:hover:bg-gray-700 transition-colors"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={() => setMapType('satellite')}
-          >
-            <Satellite className="w-4 h-4 text-gray-600 dark:text-gray-300" />
-          </motion.button>
-          <motion.button
-            className="p-2 bg-white/90 dark:bg-gray-800/90 rounded-lg shadow-lg hover:bg-white dark:hover:bg-gray-700 transition-colors"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={() => setMapType('terrain')}
-          >
-            <Terrain className="w-4 h-4 text-gray-600 dark:text-gray-300" />
-          </motion.button>
-          <motion.button
-            className="p-2 bg-white/90 dark:bg-gray-800/90 rounded-lg shadow-lg hover:bg-white dark:hover:bg-gray-700 transition-colors"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={() => setIs3DMode(!is3DMode)}
-          >
-            <Layers className="w-4 h-4 text-gray-600 dark:text-gray-300" />
-          </motion.button>
-        </div>
-
-        {/* 3D Toggle */}
-        <div className="absolute bottom-4 left-4">
-          <motion.button
-            className={`px-4 py-2 rounded-lg font-medium transition-all duration-300 ${
-              is3DMode 
-                ? 'bg-purple-500 text-white shadow-lg' 
-                : 'bg-white/90 dark:bg-gray-800/90 text-gray-700 dark:text-gray-300'
-            }`}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={() => setIs3DMode(!is3DMode)}
-          >
-            {is3DMode ? '3D Mode' : '2D Mode'}
-          </motion.button>
+        {/* Map Center Indicator */}
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-4 h-4 border-2 border-red-500 rounded-full">
+          <div className="w-2 h-2 bg-red-500 rounded-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"></div>
         </div>
       </div>
 
-      {/* Selected Marker Info */}
+      {/* Selected Marker Details */}
       {selectedMarker && (
         <motion.div
-          className="absolute bottom-4 right-4 bg-white dark:bg-gray-800 rounded-xl p-4 shadow-xl max-w-sm"
+          className="absolute bottom-4 left-4 right-4 bg-white dark:bg-gray-800 rounded-lg shadow-xl p-4 z-20"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: 20 }}
         >
-          <div className="flex items-start justify-between mb-2">
-            <h3 className="font-semibold text-gray-900 dark:text-white">
-              {selectedMarker.title}
-            </h3>
+          <div className="flex items-start justify-between mb-3">
+            <div>
+              <h3 className="text-lg font-bold text-gray-900 dark:text-white">
+                {selectedMarker.title}
+              </h3>
+              <div className="flex items-center space-x-2 text-sm text-gray-600 dark:text-gray-300">
+                <span className={`px-2 py-1 rounded-full text-xs font-medium ${getMarkerColor(selectedMarker.type)} text-white`}>
+                  {selectedMarker.type}
+                </span>
+                <span className="text-xs">
+                  {getDifficultyIcon(selectedMarker.difficulty)} {selectedMarker.difficulty}
+                </span>
+              </div>
+            </div>
             <button
               onClick={() => setSelectedMarker(null)}
-              className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+              className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
             >
               ✕
             </button>
           </div>
-          <div className="space-y-2">
-            <div className="flex items-center space-x-2">
-              <span className={`px-2 py-1 text-xs rounded-full ${getDifficultyColor(selectedMarker.difficulty)}`}>
-                {selectedMarker.difficulty}
-              </span>
-              {selectedMarker.distance && (
-                <span className="text-sm text-gray-500">
-                  {selectedMarker.distance} miles
-                </span>
-              )}
+          
+          <div className="grid grid-cols-2 gap-4 text-sm">
+            <div>
+              <span className="text-gray-500 dark:text-gray-400">Coordinates:</span>
+              <p className="font-mono text-xs">{selectedMarker.lat.toFixed(4)}, {selectedMarker.lng.toFixed(4)}</p>
             </div>
-            {selectedMarker.elevation && (
-              <p className="text-sm text-gray-500">
-                Elevation: {selectedMarker.elevation}ft
-              </p>
+            {selectedMarker.distance && (
+              <div>
+                <span className="text-gray-500 dark:text-gray-400">Distance:</span>
+                <p className="font-semibold">{selectedMarker.distance} km</p>
+              </div>
             )}
-            <button className="w-full mt-3 bg-gradient-to-r from-emerald-500 to-blue-500 text-white py-2 px-4 rounded-lg font-medium hover:from-emerald-600 hover:to-blue-600 transition-all duration-300">
-              Plan Trip Here
-            </button>
+            {selectedMarker.elevation && (
+              <div>
+                <span className="text-gray-500 dark:text-gray-400">Elevation:</span>
+                <p className="font-semibold">{selectedMarker.elevation} m</p>
+              </div>
+            )}
           </div>
         </motion.div>
       )}
