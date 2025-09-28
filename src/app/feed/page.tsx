@@ -228,6 +228,7 @@ export default function FeedPage() {
   const [showAIAssistant, setShowAIAssistant] = useState(false)
   const [_selectedTrip, _setSelectedTrip] = useState(null)
   const [darkMode, setDarkMode] = useState(false)
+  const [showWeather, setShowWeather] = useState(true)
 
   // Check if user is logged in, redirect to main page if not
   useEffect(() => {
@@ -520,7 +521,11 @@ export default function FeedPage() {
             </motion.div>
 
             {/* Weather Widget */}
-            <WeatherWidget location="Yosemite National Park, CA" />
+            <WeatherWidget 
+              location="Yosemite National Park, CA" 
+              isVisible={showWeather}
+              onClose={() => setShowWeather(false)}
+            />
 
             {/* Interactive Map */}
             <InteractiveMap />
