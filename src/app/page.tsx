@@ -593,7 +593,7 @@ export default function HomePage() {
     return num.toString()
   }
 
-  const handleAuth = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleAuth = (e: any) => {
     e.preventDefault()
 
     if (authMode === 'signin') {
@@ -742,7 +742,7 @@ export default function HomePage() {
                   type="text"
                   placeholder="Search adventures or ask AI..."
                   value={searchQuery}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchQuery(e.target.value)}
+                  onChange={(e: any) => setSearchQuery(e.target.value)}
                   className="w-full pl-10 pr-12 py-2 border border-white/20 rounded-lg focus:ring-2 focus:ring-emerald-400 focus:border-transparent bg-white/10 backdrop-blur-sm text-white placeholder-gray-300 transition-all duration-300 hover:bg-white/20"
                 />
                 <motion.button
@@ -845,7 +845,7 @@ export default function HomePage() {
             type="text"
             placeholder="Search adventures..."
             value={searchQuery}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchQuery(e.target.value)}
+            onChange={(e: any) => setSearchQuery(e.target.value)}
             className="w-full pl-10 pr-12 py-2 border border-white/20 rounded-lg focus:ring-2 focus:ring-emerald-400 focus:border-transparent bg-white/10 backdrop-blur-sm text-white placeholder-gray-300 transition-all duration-300 hover:bg-white/20"
           />
           <motion.button
@@ -900,7 +900,7 @@ export default function HomePage() {
             <SortAsc className="w-4 h-4 text-gray-300" />
             <select
               value={sortBy}
-              onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSortBy(e.target.value as 'recent' | 'popular' | 'distance')}
+              onChange={(e: any) => setSortBy(e.target.value)}
               className="border border-white/20 rounded-lg px-3 py-1 text-sm focus:ring-2 focus:ring-emerald-400 focus:border-transparent bg-white/10 backdrop-blur-sm text-white transition-all duration-300 hover:bg-white/20"
             >
               <option value="recent">Most Recent</option>
@@ -1487,7 +1487,7 @@ export default function HomePage() {
                     type="text"
                     required
                     value={authForm.name}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setAuthForm((prev: any) => ({ ...prev, name: e.target.value }))}
+                    onChange={(e: any) => setAuthForm((prev: any) => ({ ...prev, name: e.target.value }))}
                     className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white transition-colors duration-300"
                     placeholder="Your name"
                   />
@@ -1502,7 +1502,7 @@ export default function HomePage() {
                   type="email"
                   required
                   value={authForm.email}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setAuthForm((prev: any) => ({ ...prev, email: e.target.value }))}
+                  onChange={(e: any) => setAuthForm((prev: any) => ({ ...prev, email: e.target.value }))}
                   className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white transition-colors duration-300"
                   placeholder="your@email.com"
                 />
@@ -1516,7 +1516,7 @@ export default function HomePage() {
                   type="password"
                   required
                   value={authForm.password}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setAuthForm((prev: any) => ({ ...prev, password: e.target.value }))}
+                  onChange={(e: any) => setAuthForm((prev: any) => ({ ...prev, password: e.target.value }))}
                   className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white transition-colors duration-300"
                   placeholder="••••••••"
                 />
