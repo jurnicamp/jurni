@@ -3,6 +3,8 @@ declare module 'framer-motion'
 declare module 'lucide-react'
 declare module 'next/image'
 declare module 'next/link'
+declare module 'next'
+declare module 'next/font/google'
 declare module 'react'
 declare module 'react-dom'
 
