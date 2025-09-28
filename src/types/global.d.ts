@@ -6,5 +6,6 @@ declare module 'next/link'
 declare module 'react'
 declare module 'react-dom'
 
-// Node.js globals
+// Node.js globals - suppress ESLint warning for global declaration
+// eslint-disable-next-line no-unused-vars
 declare const process: any
