@@ -3,7 +3,7 @@ import { Mic, MicOff, Volume2, VolumeX } from 'lucide-react'
 import { useState, useEffect, useRef } from 'react'
 
 interface VoiceSearchProps {
-  onSearch: (query: string) => void
+  onSearch: (_query: string) => void
   isOpen: boolean
   onClose: () => void
 }

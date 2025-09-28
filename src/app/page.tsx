@@ -5,12 +5,7 @@ import {
   Camera,
   Users,
   MapPin,
-  Heart,
-  MessageCircle,
   Plus,
-  Star,
-  Clock,
-  Users2,
   Search,
   Filter,
   SortAsc,
@@ -181,7 +176,7 @@ const mockTrips: Trip[] = [
 
 export default function HomePage() {
   const [trips, setTrips] = useState<Trip[]>(mockTrips)
-  const [loading, setLoading] = useState(false)
+  const [loading, _setLoading] = useState(false)
   const [user, setUser] = useState<User | null>(null)
   const [showAuthModal, setShowAuthModal] = useState(false)
   const [authMode, setAuthMode] = useState<'signin' | 'signup'>('signin')
@@ -919,7 +914,7 @@ export default function HomePage() {
                 iconClass: 'text-purple-600 dark:text-purple-400',
                 delay: 0.3,
               },
-            ].map((feature, index) => (
+            ].map((feature, _index) => (
               <motion.div
                 key={feature.title}
                 className="group text-center p-8 rounded-2xl hover:shadow-2xl dark:hover:shadow-gray-900/20 transition-all duration-500 cursor-pointer"
