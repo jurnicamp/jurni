@@ -104,7 +104,7 @@ export function AdventureCard({ trip, index, onLike, onSave, onTripClick }: Adve
               transition={{ delay: 0.4 }}
             >
               <motion.button
-                onClick={(e: React.MouseEvent) => {
+                onClick={(e: any) => {
                   e.stopPropagation()
                   onSave?.(trip.id)
                 }}
@@ -146,7 +146,7 @@ export function AdventureCard({ trip, index, onLike, onSave, onTripClick }: Adve
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.5 }}
-          onClick={(e: React.MouseEvent) => {
+          onClick={(e: any) => {
             e.stopPropagation()
             window.location.href = `/profile/${trip.user.id}`
           }}
@@ -270,7 +270,7 @@ export function AdventureCard({ trip, index, onLike, onSave, onTripClick }: Adve
         >
           <div className="flex items-center space-x-6 text-sm text-gray-500 dark:text-gray-400">
             <motion.button
-                onClick={(e: React.MouseEvent) => {
+                onClick={(e: any) => {
                   e.stopPropagation()
                   onLike?.(trip.id)
                 }}

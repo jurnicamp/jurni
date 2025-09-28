@@ -14,7 +14,7 @@ export function VoiceSearch({ onSearch, isOpen, onClose }: VoiceSearchProps) {
   const [isProcessing, setIsProcessing] = useState(false)
   const [isMuted, setIsMuted] = useState(false)
   const [isSupported, setIsSupported] = useState(false)
-  const recognitionRef = useRef<any>(null)
+  const recognitionRef = useRef(null)
 
   useEffect(() => {
     if (typeof window !== 'undefined' && ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window)) {

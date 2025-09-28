@@ -7,7 +7,7 @@ interface TripSuggestion {
   type: 'route' | 'weather' | 'gear' | 'timing' | 'safety'
   title: string
   description: string
-  icon: React.ComponentType<any>
+  icon: any
   priority: 'high' | 'medium' | 'low'
   actionable: boolean
 }
@@ -25,7 +25,7 @@ interface AITripAssistantProps {
 }
 
 export function AITripAssistant({ trip, isVisible, onClose }: AITripAssistantProps) {
-  const [suggestions, setSuggestions] = useState<TripSuggestion[]>([])
+  const [suggestions, setSuggestions] = useState([])
   const [isLoading, setIsLoading] = useState(true)
 
   const generateSuggestions = useCallback(async () => {

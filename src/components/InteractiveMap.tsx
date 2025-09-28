@@ -20,9 +20,9 @@ interface InteractiveMapProps {
 }
 
 export function InteractiveMap({ markers, center, zoom: _zoom, onMarkerClick }: InteractiveMapProps) {
-  const [selectedMarker, setSelectedMarker] = useState<MapMarker | null>(null)
-  const [mapType, setMapType] = useState<'satellite' | 'terrain' | 'road'>('satellite')
-  const mapRef = useRef<HTMLDivElement>(null)
+  const [selectedMarker, setSelectedMarker] = useState(null)
+  const [mapType, setMapType] = useState('satellite')
+  const mapRef = useRef(null)
 
   const getMarkerColor = (type: string) => {
     switch (type) {

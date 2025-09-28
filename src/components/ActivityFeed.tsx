@@ -53,7 +53,7 @@ export function ActivityFeed({
   onTripClick,
   currentUserId 
 }: ActivityFeedProps) {
-  const [filter, setFilter] = useState<'all' | 'following'>('all')
+  const [filter, setFilter] = useState('all')
 
   const formatTimeAgo = (timestamp: Date) => {
     const now = new Date()
