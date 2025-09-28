@@ -8,8 +8,3 @@ declare module 'react-dom'
 
 // Node.js globals
 declare const process: any
-
-// Suppress strict type checking for development
-declare global {
-  var any: any
-}
