@@ -97,11 +97,11 @@ interface ProfilePageProps {
 }
 
 export default function ProfilePage({ params }: ProfilePageProps) {
-  const [user, setUser] = useState<any>(null)
-  const [userTrips, setUserTrips] = useState<any[]>([])
+  const [user, setUser] = useState(null)
+  const [userTrips, setUserTrips] = useState([])
   const [isFollowing, setIsFollowing] = useState(false)
   const [loading, setLoading] = useState(true)
-  const [activeTab, setActiveTab] = useState<'trips' | 'saved'>('trips')
+  const [activeTab, setActiveTab] = useState('trips')
 
   useEffect(() => {
     // Mock API call - replace with real API
