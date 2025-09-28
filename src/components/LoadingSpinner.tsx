@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion'
 import { TreePine, Mountain, Compass } from 'lucide-react'
-import React
+import React from 'react'
 
 interface LoadingSpinnerProps {
   size?: 'sm' | 'md' | 'lg'
