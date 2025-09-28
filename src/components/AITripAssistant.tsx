@@ -1,6 +1,6 @@
 import { motion, AnimatePresence } from 'framer-motion'
-import { Bot, MapPin, Clock, Cloud, AlertTriangle, Lightbulb, CheckCircle } from 'lucide-react'
-import { useState, useEffect } from 'react'
+import { Bot, MapPin, Clock, Cloud, AlertTriangle, Lightbulb } from 'lucide-react'
+import { useState, useEffect, useCallback } from 'react'
 
 interface TripSuggestion {
   id: string
@@ -27,15 +27,8 @@ interface AITripAssistantProps {
 export function AITripAssistant({ trip, isVisible, onClose }: AITripAssistantProps) {
   const [suggestions, setSuggestions] = useState<TripSuggestion[]>([])
   const [isLoading, setIsLoading] = useState(true)
-  const [currentSuggestion, setCurrentSuggestion] = useState(0)
 
-  useEffect(() => {
-    if (isVisible) {
-      generateSuggestions()
-    }
-  }, [isVisible, trip])
-
-  const generateSuggestions = async () => {
+  const generateSuggestions = useCallback(async () => {
     setIsLoading(true)
     
     // Simulate AI processing
@@ -91,7 +84,13 @@ export function AITripAssistant({ trip, isVisible, onClose }: AITripAssistantPro
     
     setSuggestions(aiSuggestions)
     setIsLoading(false)
-  }
+  }, [trip.difficulty, trip.duration])
+
+  useEffect(() => {
+    if (isVisible) {
+      generateSuggestions()
+    }
+  }, [isVisible, generateSuggestions])
 
   const getPriorityColor = (priority: string) => {
     switch (priority) {

@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion'
-import { MapPin, Navigation, Layers, Satellite, Terrain } from 'lucide-react'
-import { useState, useRef, useEffect } from 'react'
+import { MapPin, Layers, Satellite, Terrain } from 'lucide-react'
+import { useState, useRef } from 'react'
 
 interface MapMarker {
   id: string
@@ -17,7 +17,7 @@ interface InteractiveMapProps {
   markers: MapMarker[]
   center: { lat: number; lng: number }
   zoom: number
-  onMarkerClick?: (marker: MapMarker) => void
+  onMarkerClick?: (_marker: MapMarker) => void
 }
 
 export function InteractiveMap({ markers, center, _zoom, onMarkerClick }: InteractiveMapProps) {
