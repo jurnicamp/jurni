@@ -1374,7 +1374,7 @@ export default function HomePage() {
             difficulty: selectedTrip.difficulty,
             duration: selectedTrip.duration || '1 day',
             season: selectedTrip.season || 'Spring',
-            distance: selectedTrip.distance
+            distance: selectedTrip.distance || 0
           }}
           isVisible={showAIAssistant}
           onClose={() => setShowAIAssistant(false)}
