@@ -214,7 +214,7 @@ export function ActivityFeed({
                       whileTap={{ scale: 0.99 }}
                     >
                       <div className="flex items-start space-x-4">
-                        {activity.trip.photos && activity.trip.photos.length > 0 && (
+                        {activity.trip.photos && activity.trip.photos.length > 0 && activity.trip.photos[0] && (
                           <div className="relative w-16 h-16 rounded-lg overflow-hidden flex-shrink-0">
                             <Image
                               src={activity.trip.photos[0].url}
