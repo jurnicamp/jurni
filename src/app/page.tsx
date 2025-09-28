@@ -526,18 +526,20 @@ export default function HomePage() {
 
   // Load user and theme from localStorage on mount
   useEffect(() => {
-    const savedUser = localStorage.getItem('jurni_user')
-    const savedTheme = localStorage.getItem('jurni_theme')
+    if (typeof window !== 'undefined') {
+      const savedUser = localStorage.getItem('jurni_user')
+      const savedTheme = localStorage.getItem('jurni_theme')
 
-    if (savedUser) {
-      // If user is already logged in, redirect to feed
-      window.location.href = '/feed'
-      return
-    }
+      if (savedUser) {
+        // If user is already logged in, redirect to feed
+        window.location.href = '/feed'
+        return
+      }
 
-    if (savedTheme === 'dark') {
-      setIsDarkMode(true)
-      document.documentElement.classList.add('dark')
+      if (savedTheme === 'dark') {
+        setIsDarkMode(true)
+        document.documentElement.classList.add('dark')
+      }
     }
   }, [])
 
@@ -559,23 +561,27 @@ export default function HomePage() {
 
   // Save user to localStorage when it changes and redirect to feed
   useEffect(() => {
-    if (user) {
-      localStorage.setItem('jurni_user', JSON.stringify(user))
-      // Redirect to feed when user logs in
-      window.location.href = '/feed'
-    } else {
-      localStorage.removeItem('jurni_user')
+    if (typeof window !== 'undefined') {
+      if (user) {
+        localStorage.setItem('jurni_user', JSON.stringify(user))
+        // Redirect to feed when user logs in
+        window.location.href = '/feed'
+      } else {
+        localStorage.removeItem('jurni_user')
+      }
     }
   }, [user])
 
   // Save theme to localStorage and apply to document
   useEffect(() => {
-    localStorage.setItem('jurni_theme', isDarkMode ? 'dark' : 'light')
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('jurni_theme', isDarkMode ? 'dark' : 'light')
 
-    if (isDarkMode) {
-      document.documentElement.classList.add('dark')
-    } else {
-      document.documentElement.classList.remove('dark')
+      if (isDarkMode) {
+        document.documentElement.classList.add('dark')
+      } else {
+        document.documentElement.classList.remove('dark')
+      }
     }
   }, [isDarkMode])
 

@@ -7,7 +7,7 @@ import { Providers } from './providers'
 
 const inter = Inter({ subsets: ['latin'] })
 
-export const metadata: Metadata = {
+export const metadata: any = {
   title: 'CampShare - Share Your Adventure Stories',
   description:
     'Connect with fellow outdoor enthusiasts, discover new camping spots, and inspire others with your wilderness adventures.',

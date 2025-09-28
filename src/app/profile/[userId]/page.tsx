@@ -294,7 +294,11 @@ export default function ProfilePage({ params }: ProfilePageProps) {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
               whileHover={{ y: -5 }}
-              onClick={() => window.location.href = `/trip/${trip.id}`}
+              onClick={() => {
+                if (typeof window !== 'undefined') {
+                  window.location.href = `/trip/${trip.id}`
+                }
+              }}
             >
               <div className="relative h-48 overflow-hidden">
                 <Image

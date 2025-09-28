@@ -265,13 +265,20 @@ export default function FeedPage() {
 
   // Check if user is logged in, redirect to main page if not
   useEffect(() => {
-    // Check localStorage for user data
-    const savedUser = localStorage.getItem('jurni_user')
-    if (savedUser) {
-      setUser(JSON.parse(savedUser))
-    } else if (!user) {
-      // No user found, redirect to main page
-      window.location.href = '/'
+    // Check localStorage for user data (only on client side)
+    if (typeof window !== 'undefined') {
+      const savedUser = localStorage.getItem('jurni_user')
+      if (savedUser) {
+        try {
+          setUser(JSON.parse(savedUser))
+        } catch (error) {
+          console.error('Error parsing saved user data:', error)
+          localStorage.removeItem('jurni_user')
+        }
+      } else if (!user) {
+        // No user found, redirect to main page
+        window.location.href = '/'
+      }
     }
   }, [user])
 

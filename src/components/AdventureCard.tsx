@@ -146,10 +146,12 @@ export function AdventureCard({ trip, index, onLike, onSave, onTripClick }: Adve
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.5 }}
-          onClick={(e: any) => {
-            e.stopPropagation()
-            window.location.href = `/profile/${trip.user.id}`
-          }}
+            onClick={(e: any) => {
+              e.stopPropagation()
+              if (typeof window !== 'undefined') {
+                window.location.href = `/profile/${trip.user.id}`
+              }
+            }}
         >
           <div className="relative">
             <Image
