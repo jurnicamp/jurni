@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from 'framer-motion'
-import { Mic, MicOff, Search, Volume2, VolumeX } from 'lucide-react'
+import { Mic, MicOff, Volume2, VolumeX } from 'lucide-react'
 import { useState, useEffect, useRef } from 'react'
 
 interface VoiceSearchProps {
@@ -122,7 +122,7 @@ export function VoiceSearch({ onSearch, isOpen, onClose }: VoiceSearchProps) {
                     exit={{ opacity: 0, y: -10 }}
                   >
                     <p className="text-gray-900 dark:text-white font-medium">
-                      "{transcript}"
+                      &ldquo;{transcript}&rdquo;
                     </p>
                   </motion.div>
                 )}
@@ -191,7 +191,7 @@ export function VoiceSearch({ onSearch, isOpen, onClose }: VoiceSearchProps) {
                     }}
                     whileHover={{ x: 5 }}
                   >
-                    "{example}"
+                    &ldquo;{example}&rdquo;
                   </motion.button>
                 ))}
               </div>

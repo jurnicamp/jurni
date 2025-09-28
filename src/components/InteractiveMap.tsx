@@ -20,9 +20,9 @@ interface InteractiveMapProps {
   onMarkerClick?: (marker: MapMarker) => void
 }
 
-export function InteractiveMap({ markers, center, zoom, onMarkerClick }: InteractiveMapProps) {
-  const [mapType, setMapType] = useState<'satellite' | 'terrain' | 'hybrid'>('satellite')
+export function InteractiveMap({ markers, center, _zoom, onMarkerClick }: InteractiveMapProps) {
   const [selectedMarker, setSelectedMarker] = useState<MapMarker | null>(null)
+  const [_mapType, setMapType] = useState<'satellite' | 'terrain' | 'hybrid'>('satellite')
   const [is3DMode, setIs3DMode] = useState(false)
   const mapRef = useRef<HTMLDivElement>(null)
 
