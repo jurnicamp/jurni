@@ -29,6 +29,8 @@ import Image from 'next/image'
 import { useState, useEffect, useRef, useMemo, useCallback } from 'react'
 
 import { AdventureCard } from '@/components/AdventureCard'
+import { ActivityFeed } from '@/components/ActivityFeed'
+import Link from 'next/link'
 import { AITripAssistant } from '@/components/AITripAssistant'
 import { InteractiveMap } from '@/components/InteractiveMap'
 import { LoadingSpinner } from '@/components/LoadingSpinner'
@@ -52,7 +54,6 @@ interface Trip {
   title: string
   description: string
   location: string
-  difficulty: 'easy' | 'moderate' | 'hard'
   likes: number
   comments: number
   timestamp: Date
@@ -128,7 +129,6 @@ const mockTrips: Trip[] = [
     title: 'Amazing Mountain Hike',
     description: 'Beautiful sunrise from the peak with incredible views of the valley below. Perfect weather and great company!',
     location: 'Yosemite National Park, CA',
-    difficulty: 'moderate',
     likes: 24,
     comments: 8,
     timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000),
@@ -151,7 +151,6 @@ const mockTrips: Trip[] = [
     title: 'Lakeside Camping Adventure',
     description: 'Perfect weekend getaway with friends around the campfire. The stars were incredible!',
     location: 'Lake Tahoe, CA',
-    difficulty: 'easy',
     likes: 18,
     comments: 12,
     timestamp: new Date(Date.now() - 5 * 60 * 60 * 1000),
@@ -173,7 +172,6 @@ const mockTrips: Trip[] = [
     title: 'Desert Backpacking',
     description: 'Challenging but rewarding 3-day trek through the desert. The solitude was amazing.',
     location: 'Joshua Tree National Park, CA',
-    difficulty: 'hard',
     likes: 31,
     comments: 5,
     timestamp: new Date(Date.now() - 24 * 60 * 60 * 1000),
@@ -198,7 +196,6 @@ const mockTrips: Trip[] = [
     title: 'Karijini National Park Adventure',
     description: 'Epic 5-day trek through the ancient gorges of Karijini. The red rock formations and natural pools were absolutely breathtaking. Perfect weather and incredible wildlife sightings!',
     location: 'Karijini National Park, Western Australia',
-    difficulty: 'hard',
     likes: 47,
     comments: 12,
     timestamp: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000),
@@ -222,7 +219,6 @@ const mockTrips: Trip[] = [
     title: 'Cape to Cape Track - Margaret River',
     description: 'Stunning coastal walk along the Margaret River coastline. Perfect for whale watching season! The wildflowers were in full bloom and the ocean views were incredible.',
     location: 'Cape to Cape Track, Western Australia',
-    difficulty: 'moderate',
     likes: 38,
     comments: 8,
     timestamp: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
@@ -245,7 +241,6 @@ const mockTrips: Trip[] = [
     title: 'Rottnest Island Cycling Adventure',
     description: 'Perfect day trip cycling around Rottnest Island! Spotted quokkas, snorkeled in crystal clear waters, and enjoyed the best fish and chips in WA. Highly recommend!',
     location: 'Rottnest Island, Western Australia',
-    difficulty: 'easy',
     likes: 29,
     comments: 15,
     timestamp: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
@@ -268,7 +263,6 @@ const mockTrips: Trip[] = [
     title: 'Great Barrier Reef Snorkeling',
     description: 'Incredible day exploring the Great Barrier Reef! Saw turtles, reef sharks, and thousands of colorful fish. The coral formations were absolutely stunning. A must-do experience!',
     location: 'Great Barrier Reef, Queensland',
-    difficulty: 'easy',
     likes: 52,
     comments: 18,
     timestamp: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000),
@@ -292,7 +286,6 @@ const mockTrips: Trip[] = [
     title: 'Fraser Island 4WD Adventure',
     description: 'Epic 3-day 4WD adventure on Fraser Island! Drove along 75 Mile Beach, swam in Lake McKenzie, and camped under the stars. The dingoes were amazing to see in their natural habitat.',
     location: 'Fraser Island, Queensland',
-    difficulty: 'moderate',
     likes: 41,
     comments: 9,
     timestamp: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000),
@@ -315,7 +308,6 @@ const mockTrips: Trip[] = [
     title: 'Lamington National Park Rainforest Walk',
     description: 'Beautiful rainforest walk in Lamington National Park. The ancient trees and birdlife were incredible. Perfect for a peaceful day in nature away from the city.',
     location: 'Lamington National Park, Queensland',
-    difficulty: 'easy',
     likes: 33,
     comments: 7,
     timestamp: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000),
@@ -334,14 +326,94 @@ const mockTrips: Trip[] = [
   },
 ]
 
+// Mock activity data
+const mockActivities = [
+  {
+    id: '1',
+    type: 'trip' as const,
+    user: {
+      id: '1',
+      name: 'Sarah Johnson',
+      avatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=40&h=40&fit=crop&crop=face',
+      isFollowing: true,
+    },
+    timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000),
+    trip: {
+      id: '1',
+      title: 'Amazing Mountain Hike',
+      location: 'Yosemite National Park, CA',
+      photos: [{ url: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop' }],
+    },
+    likes: 24,
+    comments: 8,
+    isLiked: false,
+  },
+  {
+    id: '2',
+    type: 'achievement' as const,
+    user: {
+      id: '2',
+      name: 'Mike Chen',
+      avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face',
+      isFollowing: true,
+    },
+    timestamp: new Date(Date.now() - 4 * 60 * 60 * 1000),
+    achievement: {
+      name: 'Peak Bagger',
+      description: 'Completed 10 mountain summits',
+      icon: '🏔️',
+    },
+    likes: 15,
+    comments: 3,
+    isLiked: true,
+  },
+  {
+    id: '3',
+    type: 'follow' as const,
+    user: {
+      id: '3',
+      name: 'Alex Rivera',
+      avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face',
+      isFollowing: false,
+    },
+    timestamp: new Date(Date.now() - 6 * 60 * 60 * 1000),
+    targetUser: {
+      id: '4',
+      name: 'Emma Wilson',
+      avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=40&h=40&fit=crop&crop=face',
+    },
+  },
+  {
+    id: '4',
+    type: 'comment' as const,
+    user: {
+      id: '4',
+      name: 'Emma Wilson',
+      avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=40&h=40&fit=crop&crop=face',
+      isFollowing: true,
+    },
+    timestamp: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000),
+    content: 'What an incredible sunrise! The colors are absolutely stunning 🌅',
+    trip: {
+      id: '2',
+      title: 'Lakeside Camping Adventure',
+      location: 'Lake Tahoe, CA',
+      photos: [{ url: 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=400&h=300&fit=crop' }],
+    },
+    likes: 8,
+    comments: 2,
+    isLiked: false,
+  },
+]
+
 export default function HomePage() {
   const [trips, setTrips] = useState<Trip[]>(mockTrips)
+  const [activities, setActivities] = useState(mockActivities)
   const [loading, _setLoading] = useState(false)
   const [user, setUser] = useState<User | null>(null)
   const [showAuthModal, setShowAuthModal] = useState(false)
   const [authMode, setAuthMode] = useState<'signin' | 'signup'>('signin')
   const [searchQuery, setSearchQuery] = useState('')
-  const [filterDifficulty, setFilterDifficulty] = useState<string>('all')
   const [sortBy, setSortBy] = useState<'recent' | 'popular' | 'distance'>('recent')
   const [authForm, setAuthForm] = useState({
     name: '',
@@ -349,6 +421,7 @@ export default function HomePage() {
     password: '',
   })
   const [isDarkMode, setIsDarkMode] = useState(false)
+  const [viewMode, setViewMode] = useState<'feed' | 'explore'>('feed')
 
   // Dynamic statistics for hero section
   const [stats, setStats] = useState({
@@ -384,7 +457,6 @@ export default function HomePage() {
     lng: number
     title: string
     type: 'camping' | 'hiking' | 'viewpoint' | 'danger'
-    difficulty: 'easy' | 'moderate' | 'hard'
     distance?: number
     elevation?: number
   }> = [
@@ -394,7 +466,6 @@ export default function HomePage() {
       lng: -119.5383,
       title: 'Yosemite Valley',
       type: 'hiking',
-      difficulty: 'moderate',
       distance: 12.5,
       elevation: 4000
     },
@@ -404,7 +475,6 @@ export default function HomePage() {
       lng: -120.0324,
       title: 'Lake Tahoe',
       type: 'camping',
-      difficulty: 'easy',
       distance: 8.2,
       elevation: 6225
     },
@@ -414,7 +484,6 @@ export default function HomePage() {
       lng: -115.9010,
       title: 'Joshua Tree',
       type: 'hiking',
-      difficulty: 'hard',
       distance: 25.8,
       elevation: 3000
     }
@@ -569,6 +638,37 @@ export default function HomePage() {
     )
   }, [])
 
+  const handleTripClick = useCallback((tripId: string) => {
+    window.location.href = `/trip/${tripId}`
+  }, [])
+
+  const handleActivityLike = useCallback((activityId: string) => {
+    setActivities(prevActivities =>
+      prevActivities.map(activity =>
+        activity.id === activityId
+          ? {
+              ...activity,
+              isLiked: !activity.isLiked,
+              likes: activity.isLiked ? (activity.likes || 0) - 1 : (activity.likes || 0) + 1,
+            }
+          : activity
+      )
+    )
+  }, [])
+
+  const handleActivityFollow = useCallback(async (userId: string, isFollowing: boolean) => {
+    // Simulate API call
+    await new Promise(resolve => setTimeout(resolve, 300))
+    
+    setActivities(prevActivities =>
+      prevActivities.map(activity =>
+        activity.user.id === userId
+          ? { ...activity, user: { ...activity.user, isFollowing: !isFollowing } }
+          : activity
+      )
+    )
+  }, [])
+
   const filteredAndSortedTrips = useMemo(() => {
     return trips
       .filter((trip: Trip) => {
@@ -576,8 +676,7 @@ export default function HomePage() {
           trip.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
           trip.location.toLowerCase().includes(searchQuery.toLowerCase()) ||
           trip.tags?.some((tag: string) => tag.toLowerCase().includes(searchQuery.toLowerCase()))
-        const matchesDifficulty = filterDifficulty === 'all' || trip.difficulty === filterDifficulty
-        return matchesSearch && matchesDifficulty
+        return matchesSearch
       })
       .sort((a: Trip, b: Trip) => {
         switch (sortBy) {
@@ -670,19 +769,21 @@ export default function HomePage() {
               {user ? (
                 <>
                   <div className="hidden sm:flex items-center space-x-2">
-                    <Image
-                      src={
-                        user.avatar ||
-                        `https://via.placeholder.com/32x32/22C55E/FFFFFF?text=${user.name?.charAt(0) || 'U'}`
-                      }
-                      alt={user.name}
-                      width={32}
-                      height={32}
-                      className="w-8 h-8 rounded-full border-2 border-white/20"
-                    />
-                    <span className="text-white font-medium">
-                      Welcome, {user.name}!
-                    </span>
+                    <Link href={`/profile/${user.id}`} className="flex items-center space-x-2">
+                      <Image
+                        src={
+                          user.avatar ||
+                          `https://via.placeholder.com/32x32/22C55E/FFFFFF?text=${user.name?.charAt(0) || 'U'}`
+                        }
+                        alt={user.name}
+                        width={32}
+                        height={32}
+                        className="w-8 h-8 rounded-full border-2 border-white/20 hover:border-emerald-400 transition-colors"
+                      />
+                      <span className="text-white font-medium hover:text-emerald-400 transition-colors">
+                        Welcome, {user.name}!
+                      </span>
+                    </Link>
                   </div>
                   <motion.button
                     onClick={handleLogout}
@@ -760,18 +861,33 @@ export default function HomePage() {
         transition={{ duration: 0.5, delay: 0.3 }}
       >
         <div className="max-w-7xl mx-auto flex flex-wrap items-center gap-4">
+          {/* View Mode Toggle */}
+          <div className="flex items-center space-x-2 bg-white/10 rounded-lg p-1">
+            <button
+              onClick={() => setViewMode('feed')}
+              className={`px-3 py-1 rounded-md text-sm font-medium transition-colors ${
+                viewMode === 'feed'
+                  ? 'bg-white/20 text-white'
+                  : 'text-white/70 hover:text-white'
+              }`}
+            >
+              Feed
+            </button>
+            <button
+              onClick={() => setViewMode('explore')}
+              className={`px-3 py-1 rounded-md text-sm font-medium transition-colors ${
+                viewMode === 'explore'
+                  ? 'bg-white/20 text-white'
+                  : 'text-white/70 hover:text-white'
+              }`}
+            >
+              Explore
+            </button>
+          </div>
+
           <div className="flex items-center space-x-2">
             <Filter className="w-4 h-4 text-gray-300" />
-            <select
-              value={filterDifficulty}
-              onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setFilterDifficulty(e.target.value)}
-              className="border border-white/20 rounded-lg px-3 py-1 text-sm focus:ring-2 focus:ring-emerald-400 focus:border-transparent bg-white/10 backdrop-blur-sm text-white transition-all duration-300 hover:bg-white/20"
-            >
-              <option value="all">All Difficulty</option>
-              <option value="easy">Easy</option>
-              <option value="moderate">Moderate</option>
-              <option value="hard">Hard</option>
-            </select>
+            <span className="text-white text-sm font-medium">Filters</span>
           </div>
 
           <div className="flex items-center space-x-2">
@@ -1132,7 +1248,7 @@ export default function HomePage() {
         </div>
       </motion.div>
 
-      {/* Recent Adventures */}
+      {/* Main Content */}
       <motion.div
         ref={adventuresRef}
         className="bg-gradient-to-br from-gray-50 to-blue-50 dark:from-gray-800 dark:to-gray-900 py-20 transition-colors duration-300"
@@ -1151,18 +1267,73 @@ export default function HomePage() {
             transition={{ duration: 0.8, delay: 0.2 }}
           >
             <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-6 transition-colors duration-300">
-              Recent Adventures
+              {viewMode === 'feed' ? 'Activity Feed' : 'Recent Adventures'}
             </h2>
             <p className="text-gray-600 dark:text-gray-300 text-xl max-w-3xl mx-auto transition-colors duration-300">
-              See what the community has been up to
+              {viewMode === 'feed' 
+                ? 'Stay updated with the latest adventures from your community'
+                : 'Discover amazing adventures from explorers around the world'
+              }
             </p>
           </motion.div>
 
           {loading ? (
             <div className="flex justify-center py-12">
-              <LoadingSpinner size="lg" text="Loading adventures..." />
+              <LoadingSpinner size="lg" text="Loading..." />
             </div>
-          ) : filteredAndSortedTrips.length === 0 ? (
+          ) : viewMode === 'feed' && user ? (
+            /* Activity Feed */
+            <ActivityFeed
+              activities={activities}
+              onLike={handleActivityLike}
+              onFollow={handleActivityFollow}
+              onTripClick={handleTripClick}
+              currentUserId={user.id}
+            />
+          ) : viewMode === 'explore' || !user ? (
+            /* Adventure Cards */
+            filteredAndSortedTrips.length === 0 ? (
+              <motion.div
+                className="text-center py-12"
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.6 }}
+              >
+                <div className="text-gray-400 dark:text-gray-500 mb-4">
+                  <Camera className="w-16 h-16 mx-auto" />
+                </div>
+                <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2 transition-colors duration-300">
+                  No adventures found
+                </h3>
+                <p className="text-gray-600 dark:text-gray-300 transition-colors duration-300">
+                  Try adjusting your search or filters
+                </p>
+              </motion.div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {filteredAndSortedTrips.map((trip: Trip, index: number) => (
+                  <motion.div
+                    key={trip.id}
+                    initial={{ opacity: 0, y: 30 }}
+                    animate={{ 
+                      opacity: isAdventuresInView ? 1 : 0, 
+                      y: isAdventuresInView ? 0 : 30 
+                    }}
+                    transition={{ duration: 0.6, delay: index * 0.1 }}
+                  >
+                    <AdventureCard
+                      trip={trip}
+                      index={index}
+                      onLike={toggleLike}
+                      onSave={toggleSave}
+                      onTripClick={handleTripClick}
+                    />
+                  </motion.div>
+                ))}
+              </div>
+            )
+          ) : (
+            /* Empty Feed State for Logged in Users */
             <motion.div
               className="text-center py-12"
               initial={{ opacity: 0, scale: 0.8 }}
@@ -1170,36 +1341,21 @@ export default function HomePage() {
               transition={{ duration: 0.6 }}
             >
               <div className="text-gray-400 dark:text-gray-500 mb-4">
-                <Camera className="w-16 h-16 mx-auto" />
+                <Users className="w-16 h-16 mx-auto" />
               </div>
               <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2 transition-colors duration-300">
-                No adventures found
+                No activity in your feed
               </h3>
-              <p className="text-gray-600 dark:text-gray-300 transition-colors duration-300">
-                Try adjusting your search or filters
+              <p className="text-gray-600 dark:text-gray-300 transition-colors duration-300 mb-4">
+                Follow some adventurers to see their activities here
               </p>
+              <button
+                onClick={() => setViewMode('explore')}
+                className="px-6 py-2 bg-emerald-500 text-white rounded-lg hover:bg-emerald-600 transition-colors"
+              >
+                Explore Adventures
+              </button>
             </motion.div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {filteredAndSortedTrips.map((trip: Trip, index: number) => (
-                <motion.div
-                  key={trip.id}
-                  initial={{ opacity: 0, y: 30 }}
-                  animate={{ 
-                    opacity: isAdventuresInView ? 1 : 0, 
-                    y: isAdventuresInView ? 0 : 30 
-                  }}
-                  transition={{ duration: 0.6, delay: index * 0.1 }}
-                >
-                  <AdventureCard
-                    trip={trip}
-                    index={index}
-                    onLike={toggleLike}
-                    onSave={toggleSave}
-                  />
-                </motion.div>
-              ))}
-            </div>
           )}
         </div>
       </motion.div>
@@ -1397,7 +1553,6 @@ export default function HomePage() {
       <AITripAssistant
         trip={{
           location: selectedTrip?.location || 'Yosemite National Park, CA',
-          difficulty: selectedTrip?.difficulty || 'moderate',
           duration: selectedTrip?.duration || '1 day',
           season: selectedTrip?.season || 'Spring',
           distance: selectedTrip?.distance || 0

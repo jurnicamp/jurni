@@ -9,7 +9,6 @@ interface AdventureCardProps {
     title: string
     description: string
     location: string
-    difficulty: 'easy' | 'moderate' | 'hard'
     likes: number
     comments: number
     timestamp: Date
@@ -35,30 +34,24 @@ interface AdventureCardProps {
   index: number
   onLike?: (_tripId: string) => void
   onSave?: (_tripId: string) => void
+  onTripClick?: (_tripId: string) => void
 }
 
-export function AdventureCard({ trip, index, onLike, onSave }: AdventureCardProps) {
+export function AdventureCard({ trip, index, onLike, onSave, onTripClick }: AdventureCardProps) {
   const [imageLoaded, setImageLoaded] = useState(false)
   const [isHovered, setIsHovered] = useState(false)
 
-  const getDifficultyColor = (difficulty: string) => {
-    switch (difficulty) {
-      case 'easy': return 'bg-emerald-100 dark:bg-emerald-900/50 text-emerald-800 dark:text-emerald-200'
-      case 'moderate': return 'bg-amber-100 dark:bg-amber-900/50 text-amber-800 dark:text-amber-200'
-      case 'hard': return 'bg-red-100 dark:bg-red-900/50 text-red-800 dark:text-red-200'
-      default: return 'bg-gray-100 text-gray-800 dark:bg-gray-900/50 dark:text-gray-200'
-    }
-  }
 
   return (
     <motion.div
-      className="group relative bg-white dark:bg-gray-900 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden hover:shadow-2xl dark:hover:shadow-gray-900/20 transition-all duration-500"
+      className="group relative bg-white dark:bg-gray-900 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden hover:shadow-2xl dark:hover:shadow-gray-900/20 transition-all duration-500 cursor-pointer"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: index * 0.1 }}
       whileHover={{ y: -8, scale: 1.02 }}
       onHoverStart={() => setIsHovered(true)}
       onHoverEnd={() => setIsHovered(false)}
+      onClick={() => onTripClick?.(trip.id)}
     >
       {/* Image Section */}
       <div className="relative h-64 overflow-hidden">
@@ -102,19 +95,6 @@ export function AdventureCard({ trip, index, onLike, onSave }: AdventureCardProp
               </motion.div>
             )}
 
-            {/* Difficulty badge */}
-            <motion.div
-              className="absolute top-4 right-4"
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.3 }}
-            >
-              <span
-                className={`px-3 py-1 text-sm font-medium rounded-full backdrop-blur-sm ${getDifficultyColor(trip.difficulty)}`}
-              >
-                {trip.difficulty}
-              </span>
-            </motion.div>
 
             {/* Action buttons */}
             <motion.div
@@ -124,7 +104,10 @@ export function AdventureCard({ trip, index, onLike, onSave }: AdventureCardProp
               transition={{ delay: 0.4 }}
             >
               <motion.button
-                onClick={() => onSave?.(trip.id)}
+                onClick={(e) => {
+                  e.stopPropagation()
+                  onSave?.(trip.id)
+                }}
                 className={`p-2 rounded-full backdrop-blur-sm transition-all duration-300 ${
                   trip.isSaved
                     ? 'bg-emerald-500 text-white shadow-lg'
@@ -136,6 +119,10 @@ export function AdventureCard({ trip, index, onLike, onSave }: AdventureCardProp
                 <Bookmark className={`w-4 h-4 ${trip.isSaved ? 'fill-current' : ''}`} />
               </motion.button>
               <motion.button
+                onClick={(e) => {
+                  e.stopPropagation()
+                  onTripClick?.(trip.id)
+                }}
                 className="p-2 bg-white/80 dark:bg-gray-800/80 text-gray-600 dark:text-gray-300 rounded-full backdrop-blur-sm hover:bg-white dark:hover:bg-gray-800 transition-all duration-300"
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
@@ -159,6 +146,10 @@ export function AdventureCard({ trip, index, onLike, onSave }: AdventureCardProp
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.5 }}
+          onClick={(e) => {
+            e.stopPropagation()
+            window.location.href = `/profile/${trip.user.id}`
+          }}
         >
           <div className="relative">
             <Image
@@ -279,7 +270,10 @@ export function AdventureCard({ trip, index, onLike, onSave }: AdventureCardProp
         >
           <div className="flex items-center space-x-6 text-sm text-gray-500 dark:text-gray-400">
             <motion.button
-              onClick={() => onLike?.(trip.id)}
+              onClick={(e) => {
+                e.stopPropagation()
+                onLike?.(trip.id)
+              }}
               className={`flex items-center transition-all duration-300 ${
                 trip.isLiked
                   ? 'text-red-500 dark:text-red-400'
@@ -291,13 +285,17 @@ export function AdventureCard({ trip, index, onLike, onSave }: AdventureCardProp
               <Heart className={`w-5 h-5 mr-1 ${trip.isLiked ? 'fill-current' : ''}`} />
               <span className="font-medium">{trip.likes || 0}</span>
             </motion.button>
-            <motion.div
+            <motion.button
+              onClick={(e) => {
+                e.stopPropagation()
+                onTripClick?.(trip.id)
+              }}
               className="flex items-center hover:text-blue-500 dark:hover:text-blue-400 cursor-pointer transition-all duration-300"
               whileHover={{ scale: 1.1 }}
             >
               <MessageCircle className="w-5 h-5 mr-1" />
               <span className="font-medium">{trip.comments || 0}</span>
-            </motion.div>
+            </motion.button>
           </div>
         </motion.div>
       </div>
