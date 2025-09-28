@@ -21,17 +21,17 @@ interface Comment {
 
 interface CommentSectionProps {
   comments: Comment[]
-  onAddComment: (content: string, parentId?: string) => void
-  onLikeComment: (commentId: string) => void
-  onDeleteComment?: (commentId: string) => void
+  onAddComment: (_content: string, _parentId?: string) => void
+  onLikeComment: (_commentId: string) => void
+  onDeleteComment?: (_commentId: string) => void
   currentUserId?: string
 }
 
 interface CommentItemProps {
   comment: Comment
-  onLike: (commentId: string) => void
-  onReply: (content: string, parentId: string) => void
-  onDelete?: (commentId: string) => void
+  onLike: (_commentId: string) => void
+  onReply: (_content: string, _parentId: string) => void
+  onDelete?: (_commentId: string) => void
   currentUserId?: string
   isReply?: boolean
 }

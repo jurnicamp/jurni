@@ -618,10 +618,10 @@ export default function HomePage() {
     setUser(null)
   }
 
-  const toggleLike = useCallback((tripId: string) => {
+  const toggleLike = useCallback((_tripId: string) => {
     setTrips((prevTrips: Trip[]) =>
       prevTrips.map((trip: Trip) =>
-        trip.id === tripId
+        trip.id === _tripId
           ? {
               ...trip,
               isLiked: !trip.isLiked,
@@ -632,14 +632,14 @@ export default function HomePage() {
     )
   }, [])
 
-  const toggleSave = useCallback((tripId: string) => {
+  const toggleSave = useCallback((_tripId: string) => {
     setTrips((prevTrips: Trip[]) =>
-      prevTrips.map((trip: Trip) => (trip.id === tripId ? { ...trip, isSaved: !trip.isSaved } : trip))
+      prevTrips.map((trip: Trip) => (trip.id === _tripId ? { ...trip, isSaved: !trip.isSaved } : trip))
     )
   }, [])
 
-  const handleTripClick = useCallback((tripId: string) => {
-    window.location.href = `/trip/${tripId}`
+  const handleTripClick = useCallback((_tripId: string) => {
+    window.location.href = `/trip/${_tripId}`
   }, [])
 
   const handleActivityLike = useCallback((activityId: string) => {
@@ -656,14 +656,14 @@ export default function HomePage() {
     )
   }, [])
 
-  const handleActivityFollow = useCallback(async (userId: string, isFollowing: boolean) => {
+  const handleActivityFollow = useCallback(async (_userId: string, _isFollowing: boolean) => {
     // Simulate API call
     await new Promise(resolve => setTimeout(resolve, 300))
     
     setActivities(prevActivities =>
       prevActivities.map(activity =>
-        activity.user.id === userId
-          ? { ...activity, user: { ...activity.user, isFollowing: !isFollowing } }
+        activity.user.id === _userId
+          ? { ...activity, user: { ...activity.user, isFollowing: !_isFollowing } }
           : activity
       )
     )
