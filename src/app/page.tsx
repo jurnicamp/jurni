@@ -407,14 +407,14 @@ const mockActivities = [
 ]
 
 export default function HomePage() {
-  const [trips, setTrips] = useState<Trip[]>(mockTrips)
+  const [trips, setTrips] = useState(mockTrips)
   const [activities, setActivities] = useState(mockActivities)
   const [loading, _setLoading] = useState(false)
-  const [user, setUser] = useState<User | null>(null)
+  const [user, setUser] = useState(null)
   const [showAuthModal, setShowAuthModal] = useState(false)
-  const [authMode, setAuthMode] = useState<'signin' | 'signup'>('signin')
+  const [authMode, setAuthMode] = useState('signin')
   const [searchQuery, setSearchQuery] = useState('')
-  const [sortBy, setSortBy] = useState<'recent' | 'popular' | 'distance'>('recent')
+  const [sortBy, setSortBy] = useState('recent')
   const [authForm, setAuthForm] = useState({
     name: '',
     email: '',
@@ -448,7 +448,7 @@ export default function HomePage() {
   const [showVoiceSearch, setShowVoiceSearch] = useState(false)
   const [showWeather, setShowWeather] = useState(false)
   const [showMap, setShowMap] = useState(false)
-  const [selectedTrip, _setSelectedTrip] = useState<Trip | null>(null)
+  const [selectedTrip, _setSelectedTrip] = useState(null)
 
   // Map markers for interactive map
   const mapMarkers: Array<{

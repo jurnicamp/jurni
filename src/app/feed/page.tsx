@@ -489,7 +489,7 @@ export default function FeedPage() {
                     trip={trip}
                     onLike={toggleLike}
                     onSave={toggleSave}
-                    onComment={handleTripClick}
+                    onTripClick={handleTripClick}
                     index={index}
                   />
                 ))}
