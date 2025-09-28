@@ -8,7 +8,6 @@ interface MapMarker {
   lng: number
   title: string
   type: 'camping' | 'hiking' | 'viewpoint' | 'danger'
-  difficulty: 'easy' | 'moderate' | 'hard'
   distance?: number
   elevation?: number
 }
@@ -40,16 +39,18 @@ export function InteractiveMap({ markers, center, zoom: _zoom, onMarkerClick }: 
     }
   }
 
-  const getDifficultyIcon = (difficulty: string) => {
-    switch (difficulty) {
-      case 'easy': 
-        return '🟢'
-      case 'moderate': 
-        return '🟡'
-      case 'hard': 
-        return '🔴'
+  const getTypeIcon = (type: string) => {
+    switch (type) {
+      case 'camping': 
+        return '🏕️'
+      case 'hiking': 
+        return '🥾'
+      case 'viewpoint': 
+        return '👁️'
+      case 'danger': 
+        return '⚠️'
       default: 
-        return '⚪'
+        return '📍'
     }
   }
 
@@ -119,7 +120,7 @@ export function InteractiveMap({ markers, center, zoom: _zoom, onMarkerClick }: 
             }}
           >
             <div className={`w-6 h-6 rounded-full ${getMarkerColor(marker.type)} shadow-lg border-2 border-white dark:border-gray-800 flex items-center justify-center text-white text-xs font-bold`}>
-              {getDifficultyIcon(marker.difficulty)}
+              {getTypeIcon(marker.type)}
             </div>
             
             <motion.div
@@ -155,7 +156,7 @@ export function InteractiveMap({ markers, center, zoom: _zoom, onMarkerClick }: 
                   {selectedMarker.type}
                 </span>
                 <span className="text-xs">
-                  {getDifficultyIcon(selectedMarker.difficulty)} {selectedMarker.difficulty}
+                  {getTypeIcon(selectedMarker.type)}
                 </span>
               </div>
             </div>

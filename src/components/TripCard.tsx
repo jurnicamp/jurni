@@ -7,7 +7,6 @@ interface Trip {
   title: string
   description: string
   location: string
-  difficulty: 'easy' | 'moderate' | 'hard'
   likes: number
   comments: number
   timestamp: Date
@@ -55,19 +54,6 @@ export function TripCard({ trip, index }: TripCardProps) {
             fill
             className="object-cover group-hover:scale-105 transition-transform duration-200"
           />
-          <div className="absolute top-3 right-3">
-            <span
-              className={`px-2 py-1 text-xs font-medium rounded-full ${
-                trip.difficulty === 'easy'
-                  ? 'bg-green-100 text-green-800'
-                  : trip.difficulty === 'moderate'
-                    ? 'bg-yellow-100 text-yellow-800'
-                    : 'bg-red-100 text-red-800'
-              }`}
-            >
-              {trip.difficulty}
-            </span>
-          </div>
         </div>
       ) : (
         <div className="h-48 bg-gray-100 flex items-center justify-center">
