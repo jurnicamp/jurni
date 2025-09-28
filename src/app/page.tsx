@@ -644,15 +644,20 @@ export default function HomePage() {
 
   const handleActivityLike = useCallback((activityId: string) => {
     setActivities(prevActivities =>
-      prevActivities.map(activity =>
-        activity.id === activityId
-          ? {
+      prevActivities.map(activity => {
+        if (activity.id === activityId) {
+          // Only update activities that have likes/isLiked properties
+          if ('likes' in activity && 'isLiked' in activity) {
+            return {
               ...activity,
               isLiked: !activity.isLiked,
-              likes: activity.isLiked ? (activity.likes || 0) - 1 : (activity.likes || 0) + 1,
+              likes: activity.isLiked ? activity.likes - 1 : activity.likes + 1,
             }
-          : activity
-      )
+          }
+          return activity
+        }
+        return activity
+      })
     )
   }, [])
 
