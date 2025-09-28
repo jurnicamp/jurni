@@ -27,26 +27,34 @@ export function InteractiveMap({ markers, center, _zoom, onMarkerClick }: Intera
 
   const getMarkerColor = (type: string) => {
     switch (type) {
-      case 'camping': return 'bg-emerald-500'
-      case 'hiking': return 'bg-blue-500'
-      case 'viewpoint': return 'bg-purple-500'
-      case 'danger': return 'bg-red-500'
-      default: return 'bg-gray-500'
+      case 'camping': 
+        return 'bg-emerald-500'
+      case 'hiking': 
+        return 'bg-blue-500'
+      case 'viewpoint': 
+        return 'bg-purple-500'
+      case 'danger': 
+        return 'bg-red-500'
+      default: 
+        return 'bg-gray-500'
     }
   }
 
   const getDifficultyIcon = (difficulty: string) => {
     switch (difficulty) {
-      case 'easy': return '🟢'
-      case 'moderate': return '🟡'
-      case 'hard': return '🔴'
-      default: return '⚪'
+      case 'easy': 
+        return '🟢'
+      case 'moderate': 
+        return '🟡'
+      case 'hard': 
+        return '🔴'
+      default: 
+        return '⚪'
     }
   }
 
   return (
     <div className="relative w-full h-full bg-gray-100 dark:bg-gray-800 rounded-lg overflow-hidden">
-      {/* Map Controls */}
       <div className="absolute top-4 left-4 z-10 flex flex-col space-y-2">
         <motion.button
           onClick={() => setMapType('satellite')}
@@ -88,14 +96,11 @@ export function InteractiveMap({ markers, center, _zoom, onMarkerClick }: Intera
         </motion.button>
       </div>
 
-      {/* Map Container */}
       <div ref={mapRef} className="relative w-full h-full">
-        {/* 3D Terrain Effect */}
         <div className="absolute inset-0 bg-gradient-to-br from-emerald-200 via-blue-200 to-purple-200 dark:from-emerald-900 dark:via-blue-900 dark:to-purple-900">
-          <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width=\"60\" height=\"60\" viewBox=\"0 0 60 60\" xmlns=\"http://www.w3.org/2000/svg\"%3E%3Cg fill=\"none\" fill-rule=\"evenodd\"%3E%3Cg fill=\"%239C92AC\" fill-opacity=\"0.1\"%3E%3Ccircle cx=\"30\" cy=\"30\" r=\"2\"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-20"></div>
+          <div className="absolute inset-0 opacity-20 bg-gray-300 dark:bg-gray-600"></div>
         </div>
 
-        {/* Map Markers */}
         {markers.map((marker, index) => (
           <motion.div
             key={marker.id}
@@ -117,7 +122,6 @@ export function InteractiveMap({ markers, center, _zoom, onMarkerClick }: Intera
               {getDifficultyIcon(marker.difficulty)}
             </div>
             
-            {/* Marker Label */}
             <motion.div
               className="absolute top-8 left-1/2 transform -translate-x-1/2 bg-white dark:bg-gray-800 text-gray-900 dark:text-white px-2 py-1 rounded text-xs font-medium shadow-lg whitespace-nowrap"
               initial={{ opacity: 0, y: -10 }}
@@ -129,13 +133,11 @@ export function InteractiveMap({ markers, center, _zoom, onMarkerClick }: Intera
           </motion.div>
         ))}
 
-        {/* Map Center Indicator */}
         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-4 h-4 border-2 border-red-500 rounded-full">
           <div className="w-2 h-2 bg-red-500 rounded-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"></div>
         </div>
       </div>
 
-      {/* Selected Marker Details */}
       {selectedMarker && (
         <motion.div
           className="absolute bottom-4 left-4 right-4 bg-white dark:bg-gray-800 rounded-lg shadow-xl p-4 z-20"
