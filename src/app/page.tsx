@@ -530,7 +530,9 @@ export default function HomePage() {
     const savedTheme = localStorage.getItem('jurni_theme')
 
     if (savedUser) {
-      setUser(JSON.parse(savedUser))
+      // If user is already logged in, redirect to feed
+      window.location.href = '/feed'
+      return
     }
 
     if (savedTheme === 'dark') {
@@ -555,10 +557,12 @@ export default function HomePage() {
     return () => document.removeEventListener('keydown', handleEscKey)
   }, [showAuthModal, showAIAssistant, showVoiceSearch, showWeather, showMap])
 
-  // Save user to localStorage when it changes
+  // Save user to localStorage when it changes and redirect to feed
   useEffect(() => {
     if (user) {
       localStorage.setItem('jurni_user', JSON.stringify(user))
+      // Redirect to feed when user logs in
+      window.location.href = '/feed'
     } else {
       localStorage.removeItem('jurni_user')
     }
