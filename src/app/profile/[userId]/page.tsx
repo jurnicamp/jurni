@@ -5,6 +5,7 @@ import { ArrowLeft, Camera, MapPin, Calendar, Heart, MessageCircle } from 'lucid
 import Image from 'next/image'
 import Link from 'next/link'
 import { useState, useEffect } from 'react'
+
 import { FollowButton } from '@/components/FollowButton'
 
 // Mock user data (replace with real API calls)

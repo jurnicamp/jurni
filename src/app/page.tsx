@@ -26,11 +26,11 @@ import {
   Camera,
 } from 'lucide-react'
 import Image from 'next/image'
+import Link from 'next/link'
 import { useState, useEffect, useRef, useMemo, useCallback } from 'react'
 
-import { AdventureCard } from '@/components/AdventureCard'
 import { ActivityFeed } from '@/components/ActivityFeed'
-import Link from 'next/link'
+import { AdventureCard } from '@/components/AdventureCard'
 import { AITripAssistant } from '@/components/AITripAssistant'
 import { InteractiveMap } from '@/components/InteractiveMap'
 import { LoadingSpinner } from '@/components/LoadingSpinner'
@@ -689,7 +689,7 @@ export default function HomePage() {
             return b.timestamp.getTime() - a.timestamp.getTime()
         }
       })
-  }, [trips, searchQuery, filterDifficulty, sortBy])
+  }, [trips, searchQuery, sortBy])
 
   const handleVoiceSearch = useCallback((query: string) => {
     setSearchQuery(query)

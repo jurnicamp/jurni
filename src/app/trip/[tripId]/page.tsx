@@ -5,6 +5,7 @@ import { ArrowLeft, Heart, Share, Bookmark, MapPin, Clock, Users2 } from 'lucide
 import Image from 'next/image'
 import Link from 'next/link'
 import { useState, useEffect } from 'react'
+
 import { CommentSection } from '@/components/CommentSection'
 
 // Mock data
