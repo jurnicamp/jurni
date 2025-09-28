@@ -41,7 +41,7 @@ function CommentItem({ comment, onLike, onReply, onDelete, currentUserId, isRepl
   const [replyText, setReplyText] = useState('')
   const [showReplies, setShowReplies] = useState(false)
 
-  const handleReplySubmit = (e: React.FormEvent) => {
+  const handleReplySubmit = (e: any) => {
     e.preventDefault()
     if (!replyText.trim()) return
 
@@ -224,7 +224,7 @@ export function CommentSection({
 }: CommentSectionProps) {
   const [newComment, setNewComment] = useState('')
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: any) => {
     e.preventDefault()
     if (!newComment.trim()) return
 
