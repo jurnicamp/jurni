@@ -50,7 +50,7 @@ export function VoiceSearch({ onSearch, isOpen, onClose }: VoiceSearchProps) {
       }
 
       recognitionRef.current.onnomatch = () => {
-        console.log('No speech was recognized')
+        // No speech was recognized
         setIsListening(false)
       }
     } else {

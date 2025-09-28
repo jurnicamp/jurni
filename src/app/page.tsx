@@ -375,7 +375,7 @@ export default function HomePage() {
   const [showVoiceSearch, setShowVoiceSearch] = useState(false)
   const [showWeather, setShowWeather] = useState(false)
   const [showMap, setShowMap] = useState(false)
-  const [selectedTrip, setSelectedTrip] = useState<Trip | null>(null)
+  const [selectedTrip, _setSelectedTrip] = useState<Trip | null>(null)
 
   // Map markers for interactive map
   const mapMarkers: Array<{
