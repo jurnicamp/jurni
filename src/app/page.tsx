@@ -1555,6 +1555,7 @@ export default function HomePage() {
       <AITripAssistant
         trip={{
           location: selectedTrip?.location || 'Yosemite National Park, CA',
+          difficulty: selectedTrip?.difficulty || 'Moderate',
           duration: selectedTrip?.duration || '1 day',
           season: selectedTrip?.season || 'Spring',
           distance: selectedTrip?.distance || 0
