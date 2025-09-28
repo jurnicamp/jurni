@@ -421,7 +421,7 @@ export default function HomePage() {
     password: '',
   })
   const [isDarkMode, setIsDarkMode] = useState(false)
-  const [viewMode, setViewMode] = useState<'feed' | 'explore'>('feed')
+  const [viewMode, setViewMode] = useState('feed')
 
   // Dynamic statistics for hero section
   const [stats, setStats] = useState({
@@ -433,9 +433,9 @@ export default function HomePage() {
 
   // Scroll animations
   const { scrollYProgress } = useScroll()
-  const heroRef = useRef<HTMLDivElement>(null)
-  const featuresRef = useRef<HTMLDivElement>(null)
-  const adventuresRef = useRef<HTMLDivElement>(null)
+  const heroRef = useRef(null)
+  const featuresRef = useRef(null)
+  const adventuresRef = useRef(null)
 
   const heroY = useTransform(scrollYProgress, [0, 1], ['0%', '50%'])
   const heroOpacity = useTransform(scrollYProgress, [0, 0.5], [1, 0])
