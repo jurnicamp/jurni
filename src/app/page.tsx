@@ -1,6 +1,6 @@
 'use client'
 
-import { motion } from 'framer-motion'
+import { motion, useScroll, useTransform, useInView } from 'framer-motion'
 import {
   Camera,
   Users,
@@ -28,9 +28,18 @@ import {
   Compass,
   ArrowRight,
   Sparkles,
+  Bot,
+  Mic,
+  Cloud,
 } from 'lucide-react'
 import Image from 'next/image'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
+import { AITripAssistant } from '@/components/AITripAssistant'
+import { InteractiveMap } from '@/components/InteractiveMap'
+import { VoiceSearch } from '@/components/VoiceSearch'
+import { WeatherWidget } from '@/components/WeatherWidget'
+import { AdventureCard } from '@/components/AdventureCard'
+import { LoadingSpinner } from '@/components/LoadingSpinner'
 
 // Types
 interface User {
@@ -200,6 +209,56 @@ export default function HomePage() {
     countries: 0,
     photos: 0,
   })
+
+  // New state for advanced features
+  const [showAIAssistant, setShowAIAssistant] = useState(false)
+  const [showVoiceSearch, setShowVoiceSearch] = useState(false)
+  const [showWeather, setShowWeather] = useState(false)
+  const [showMap, setShowMap] = useState(false)
+  const [selectedTrip, setSelectedTrip] = useState<Trip | null>(null)
+
+  // Map markers for interactive map
+  const mapMarkers: Array<{
+    id: string
+    lat: number
+    lng: number
+    title: string
+    type: 'camping' | 'hiking' | 'viewpoint' | 'danger'
+    difficulty: 'easy' | 'moderate' | 'hard'
+    distance?: number
+    elevation?: number
+  }> = [
+    {
+      id: '1',
+      lat: 37.8651,
+      lng: -119.5383,
+      title: 'Yosemite Valley',
+      type: 'hiking',
+      difficulty: 'moderate',
+      distance: 12.5,
+      elevation: 4000
+    },
+    {
+      id: '2',
+      lat: 39.0968,
+      lng: -120.0324,
+      title: 'Lake Tahoe',
+      type: 'camping',
+      difficulty: 'easy',
+      distance: 8.2,
+      elevation: 6225
+    },
+    {
+      id: '3',
+      lat: 33.8734,
+      lng: -115.9010,
+      title: 'Joshua Tree',
+      type: 'hiking',
+      difficulty: 'hard',
+      distance: 25.8,
+      elevation: 3000
+    }
+  ]
 
   // Animate statistics on mount
   useEffect(() => {
@@ -372,6 +431,16 @@ export default function HomePage() {
       }
     })
 
+  const handleVoiceSearch = (query: string) => {
+    setSearchQuery(query)
+    // Trigger search with voice query
+  }
+
+  const handleMarkerClick = (marker: any) => {
+    // Handle map marker click
+    console.log('Marker clicked:', marker)
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 transition-colors duration-300">
       {/* Navigation */}
@@ -403,11 +472,19 @@ export default function HomePage() {
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-300 w-4 h-4" />
                 <input
                   type="text"
-                  placeholder="Search adventures..."
+                  placeholder="Search adventures or ask AI..."
                   value={searchQuery}
                   onChange={e => setSearchQuery(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 border border-white/20 rounded-lg focus:ring-2 focus:ring-emerald-400 focus:border-transparent bg-white/10 backdrop-blur-sm text-white placeholder-gray-300 transition-colors duration-300"
+                  className="w-full pl-10 pr-12 py-2 border border-white/20 rounded-lg focus:ring-2 focus:ring-emerald-400 focus:border-transparent bg-white/10 backdrop-blur-sm text-white placeholder-gray-300 transition-all duration-300 hover:bg-white/20"
                 />
+                <motion.button
+                  onClick={() => setShowVoiceSearch(true)}
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-300 hover:text-emerald-400 transition-colors"
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.9 }}
+                >
+                  <Mic className="w-4 h-4" />
+                </motion.button>
               </div>
             </div>
 
@@ -535,6 +612,28 @@ export default function HomePage() {
               <option value="distance">Closest</option>
             </select>
           </div>
+
+          {/* New AI and Weather buttons */}
+          <motion.button
+            onClick={() => setShowAIAssistant(true)}
+            className="flex items-center space-x-2 px-3 py-1 bg-purple-500/20 hover:bg-purple-500/30 text-purple-300 rounded-lg transition-all duration-300"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            <Bot className="w-4 h-4" />
+            <span className="text-sm">AI Assistant</span>
+          </motion.button>
+
+          <motion.button
+            onClick={() => setShowWeather(true)}
+            className="flex items-center space-x-2 px-3 py-1 bg-blue-500/20 hover:bg-blue-500/30 text-blue-300 rounded-lg transition-all duration-300"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            <Cloud className="w-4 h-4" />
+            <span className="text-sm">Weather</span>
+          </motion.button>
+
         </div>
       </motion.div>
 
@@ -1108,6 +1207,60 @@ export default function HomePage() {
             </motion.button>
           </motion.div>
         </motion.div>
+      )}
+
+      {/* AI Trip Assistant Modal */}
+      {selectedTrip && (
+        <AITripAssistant
+          trip={{
+            location: selectedTrip.location,
+            difficulty: selectedTrip.difficulty,
+            duration: selectedTrip.duration || '1 day',
+            season: selectedTrip.season || 'Spring',
+            distance: selectedTrip.distance
+          }}
+          isVisible={showAIAssistant}
+          onClose={() => setShowAIAssistant(false)}
+        />
+      )}
+
+      {/* Voice Search Modal */}
+      <VoiceSearch
+        onSearch={handleVoiceSearch}
+        isOpen={showVoiceSearch}
+        onClose={() => setShowVoiceSearch(false)}
+      />
+
+      {/* Weather Widget Modal */}
+      <WeatherWidget
+        location="Yosemite National Park, CA"
+        isVisible={showWeather}
+        onClose={() => setShowWeather(false)}
+      />
+
+      {/* Interactive Map - only show when showMap is true */}
+      {showMap && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="bg-white dark:bg-gray-900 rounded-2xl p-6 w-full max-w-4xl max-h-[80vh] overflow-hidden">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-2xl font-bold text-gray-900 dark:text-white">
+                Interactive Map
+              </h3>
+              <button
+                onClick={() => setShowMap(false)}
+                className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+              >
+                ✕
+              </button>
+            </div>
+            <InteractiveMap
+              markers={mapMarkers}
+              center={{ lat: 37.8651, lng: -119.5383 }}
+              zoom={10}
+              onMarkerClick={handleMarkerClick}
+            />
+          </div>
+        </div>
       )}
     </div>
   )
