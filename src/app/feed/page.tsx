@@ -2,40 +2,26 @@
 
 import { motion } from 'framer-motion'
 import {
-  Users,
-  MapPin,
   Plus,
   Search,
   Filter,
-  SortAsc,
   LogOut,
-  User,
   Moon,
   Sun,
   TreePine,
-  TrendingUp,
-  Globe,
-  Award,
-  Zap,
   Compass,
-  ArrowRight,
-  Sparkles,
   Bot,
-  Cloud,
   Mic,
-  Camera,
 } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
-import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react'
+import React, { useState, useEffect, useMemo, useCallback } from 'react'
 
 import { ActivityFeed } from '@/components/ActivityFeed'
 import { AdventureCard } from '@/components/AdventureCard'
 import { AITripAssistant } from '@/components/AITripAssistant'
 import { InteractiveMap } from '@/components/InteractiveMap'
 import { LoadingSpinner } from '@/components/LoadingSpinner'
-import { TripCard } from '@/components/TripCard'
-import { VoiceSearch } from '@/components/VoiceSearch'
 import { WeatherWidget } from '@/components/WeatherWidget'
 
 // Types
@@ -240,7 +226,7 @@ export default function FeedPage() {
   const [searchQuery, setSearchQuery] = useState('')
   const [sortBy, setSortBy] = useState<'recent' | 'popular' | 'distance'>('recent')
   const [showAIAssistant, setShowAIAssistant] = useState(false)
-  const [selectedTrip, setSelectedTrip] = useState<Trip | null>(null)
+  const [_selectedTrip, _setSelectedTrip] = useState<Trip | null>(null)
   const [darkMode, setDarkMode] = useState(false)
 
   // Check if user is logged in, redirect to main page if not
@@ -336,7 +322,7 @@ export default function FeedPage() {
       })
   }, [trips, searchQuery, sortBy])
 
-  const handleVoiceSearch = useCallback((query: string) => {
+  const _handleVoiceSearch = useCallback((query: string) => {
     setSearchQuery(query)
   }, [])
 
@@ -450,7 +436,7 @@ export default function FeedPage() {
               <div className="flex items-center justify-between">
                 <div>
                   <h1 className="text-2xl font-bold mb-2">Welcome back, {user?.name}! 👋</h1>
-                  <p className="text-emerald-100">Ready for your next adventure? Check out what's happening in your feed.</p>
+                  <p className="text-emerald-100">Ready for your next adventure? Check out what&apos;s happening in your feed.</p>
                 </div>
                 <motion.button
                   onClick={() => setShowAIAssistant(true)}
@@ -545,11 +531,11 @@ export default function FeedPage() {
       {/* AI Trip Assistant Modal */}
       <AITripAssistant
         trip={{
-          location: selectedTrip?.location || 'Yosemite National Park, CA',
+          location: _selectedTrip?.location || 'Yosemite National Park, CA',
           difficulty: 'Moderate',
-          duration: selectedTrip?.duration || '1 day',
-          season: selectedTrip?.season || 'Spring',
-          distance: selectedTrip?.distance || 0
+          duration: _selectedTrip?.duration || '1 day',
+          season: _selectedTrip?.season || 'Spring',
+          distance: _selectedTrip?.distance || 0
         }}
         isVisible={showAIAssistant}
         onClose={() => setShowAIAssistant(false)}
