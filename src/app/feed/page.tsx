@@ -219,14 +219,14 @@ const mockActivities = [
 ]
 
 export default function FeedPage() {
-  const [trips, setTrips] = useState<Trip[]>(mockTrips)
+  const [trips, setTrips] = useState(mockTrips)
   const [activities, setActivities] = useState(mockActivities)
   const [loading, _setLoading] = useState(false)
-  const [user, setUser] = useState<User | null>(mockUsers[0]) // Default to logged in user
+  const [user, setUser] = useState(mockUsers[0]) // Default to logged in user
   const [searchQuery, setSearchQuery] = useState('')
-  const [sortBy, setSortBy] = useState<'recent' | 'popular' | 'distance'>('recent')
+  const [sortBy, setSortBy] = useState('recent')
   const [showAIAssistant, setShowAIAssistant] = useState(false)
-  const [_selectedTrip, _setSelectedTrip] = useState<Trip | null>(null)
+  const [_selectedTrip, _setSelectedTrip] = useState(null)
   const [darkMode, setDarkMode] = useState(false)
 
   // Check if user is logged in, redirect to main page if not
