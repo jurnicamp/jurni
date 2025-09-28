@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion'
-import { Heart, MessageCircle, MapPin, Camera, Bookmark, Share2, Clock, Users2, Star } from 'lucide-react'
+import { Heart, MessageCircle, MapPin, Camera, Clock, Users2, Star } from 'lucide-react'
 import Image from 'next/image'
 import { useState } from 'react'
 
@@ -27,8 +27,8 @@ interface AdventureCardProps {
     isSaved?: boolean
   }
   index: number
-  onLike?: (tripId: string) => void
-  onSave?: (tripId: string) => void
+  onLike?: (_tripId: string) => void
+  onSave?: (_tripId: string) => void
 }
 
 export function AdventureCard({ trip, index, onLike, onSave }: AdventureCardProps) {
@@ -125,14 +125,14 @@ export function AdventureCard({ trip, index, onLike, onSave }: AdventureCardProp
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
               >
-                <Bookmark className="w-4 h-4" />
+                <Heart className="w-4 h-4" />
               </motion.button>
               <motion.button
                 className="p-2 bg-white/80 dark:bg-gray-800/80 text-gray-600 dark:text-gray-300 rounded-full backdrop-blur-sm hover:bg-white dark:hover:bg-gray-800 transition-all duration-300"
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
               >
-                <Share2 className="w-4 h-4" />
+                <MessageCircle className="w-4 h-4" />
               </motion.button>
             </motion.div>
           </>

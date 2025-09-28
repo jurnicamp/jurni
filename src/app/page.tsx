@@ -11,8 +11,6 @@ import {
   Star,
   Clock,
   Users2,
-  Bookmark,
-  Share2,
   Search,
   Filter,
   SortAsc,
@@ -34,12 +32,13 @@ import {
 } from 'lucide-react'
 import Image from 'next/image'
 import { useState, useEffect, useRef } from 'react'
+
+import { AdventureCard } from '@/components/AdventureCard'
 import { AITripAssistant } from '@/components/AITripAssistant'
 import { InteractiveMap } from '@/components/InteractiveMap'
+import { LoadingSpinner } from '@/components/LoadingSpinner'
 import { VoiceSearch } from '@/components/VoiceSearch'
 import { WeatherWidget } from '@/components/WeatherWidget'
-import { AdventureCard } from '@/components/AdventureCard'
-import { LoadingSpinner } from '@/components/LoadingSpinner'
 
 // Types
 interface User {
@@ -79,8 +78,7 @@ const mockUsers: User[] = [
     id: '1',
     name: 'Sarah Johnson',
     email: 'sarah@example.com',
-    avatar:
-      'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=40&h=40&fit=crop&crop=face',
+    avatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=40&h=40&fit=crop&crop=face',
     bio: 'Mountain enthusiast and photographer',
     followers: 1250,
     following: 340,
@@ -90,8 +88,7 @@ const mockUsers: User[] = [
     id: '2',
     name: 'Mike Chen',
     email: 'mike@example.com',
-    avatar:
-      'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face',
+    avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face',
     bio: 'Lake camping expert',
     followers: 890,
     following: 210,
@@ -101,8 +98,7 @@ const mockUsers: User[] = [
     id: '3',
     name: 'Alex Rivera',
     email: 'alex@example.com',
-    avatar:
-      'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face',
+    avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face',
     bio: 'Desert backpacking specialist',
     followers: 2100,
     following: 180,
@@ -115,8 +111,7 @@ const mockTrips: Trip[] = [
   {
     id: '1',
     title: 'Amazing Mountain Hike',
-    description:
-      'Beautiful sunrise from the peak with incredible views of the valley below. Perfect weather and great company!',
+    description: 'Beautiful sunrise from the peak with incredible views of the valley below. Perfect weather and great company!',
     location: 'Yosemite National Park, CA',
     difficulty: 'moderate',
     likes: 24,
@@ -139,8 +134,7 @@ const mockTrips: Trip[] = [
   {
     id: '2',
     title: 'Lakeside Camping Adventure',
-    description:
-      'Perfect weekend getaway with friends around the campfire. The stars were incredible!',
+    description: 'Perfect weekend getaway with friends around the campfire. The stars were incredible!',
     location: 'Lake Tahoe, CA',
     difficulty: 'easy',
     likes: 18,
@@ -162,8 +156,7 @@ const mockTrips: Trip[] = [
   {
     id: '3',
     title: 'Desert Backpacking',
-    description:
-      'Challenging but rewarding 3-day trek through the desert. The solitude was amazing.',
+    description: 'Challenging but rewarding 3-day trek through the desert. The solitude was amazing.',
     location: 'Joshua Tree National Park, CA',
     difficulty: 'hard',
     likes: 31,
@@ -188,7 +181,7 @@ const mockTrips: Trip[] = [
 
 export default function HomePage() {
   const [trips, setTrips] = useState<Trip[]>(mockTrips)
-  const [loading, _setLoading] = useState(false)
+  const [loading, setLoading] = useState(false)
   const [user, setUser] = useState<User | null>(null)
   const [showAuthModal, setShowAuthModal] = useState(false)
   const [authMode, setAuthMode] = useState<'signin' | 'signup'>('signin')
@@ -210,12 +203,24 @@ export default function HomePage() {
     photos: 0,
   })
 
+  // Scroll animations
+  const { scrollYProgress } = useScroll()
+  const heroRef = useRef<HTMLDivElement>(null)
+  const featuresRef = useRef<HTMLDivElement>(null)
+  const adventuresRef = useRef<HTMLDivElement>(null)
+
+  const heroY = useTransform(scrollYProgress, [0, 1], ['0%', '50%'])
+  const heroOpacity = useTransform(scrollYProgress, [0, 0.5], [1, 0])
+
+  const isFeaturesInView = useInView(featuresRef, { once: true, margin: '-100px' })
+  const isAdventuresInView = useInView(adventuresRef, { once: true, margin: '-100px' })
+
   // New state for advanced features
   const [showAIAssistant, setShowAIAssistant] = useState(false)
   const [showVoiceSearch, setShowVoiceSearch] = useState(false)
   const [showWeather, setShowWeather] = useState(false)
   const [showMap, setShowMap] = useState(false)
-  const [selectedTrip, setSelectedTrip] = useState<Trip | null>(null)
+  const [selectedTrip, _setSelectedTrip] = useState<Trip | null>(null)
 
   // Map markers for interactive map
   const mapMarkers: Array<{
@@ -334,21 +339,6 @@ export default function HomePage() {
     setIsDarkMode(!isDarkMode)
   }
 
-  const formatTimeAgo = (timestamp: Date) => {
-    const now = new Date()
-    const time = new Date(timestamp)
-    const diffInHours = Math.floor((now.getTime() - time.getTime()) / (1000 * 60 * 60))
-
-    if (diffInHours < 1) return 'Just now'
-    if (diffInHours < 24) return `${diffInHours}h ago`
-
-    const diffInDays = Math.floor(diffInHours / 24)
-    if (diffInDays < 7) return `${diffInDays}d ago`
-
-    const diffInWeeks = Math.floor(diffInDays / 7)
-    return `${diffInWeeks}w ago`
-  }
-
   const formatNumber = (num: number) => {
     if (num >= 1000000) {
       return (num / 1000000).toFixed(1) + 'M'
@@ -363,13 +353,11 @@ export default function HomePage() {
     e.preventDefault()
 
     if (authMode === 'signin') {
-      // Simple sign in - just use first mock user for demo
       const mockUser = mockUsers[0]!
       setUser(mockUser)
       setShowAuthModal(false)
       setAuthForm({ name: '', email: '', password: '' })
     } else {
-      // Simple sign up - create new user
       const newUser: User = {
         id: Date.now().toString(),
         name: authForm.name,
@@ -433,12 +421,10 @@ export default function HomePage() {
 
   const handleVoiceSearch = (query: string) => {
     setSearchQuery(query)
-    // Trigger search with voice query
   }
 
-  const handleMarkerClick = (marker: any) => {
+  const handleMarkerClick = (_marker: any) => {
     // Handle map marker click
-    console.log('Marker clicked:', marker)
   }
 
   return (
@@ -446,9 +432,9 @@ export default function HomePage() {
       {/* Navigation */}
       <motion.nav
         className="bg-white/10 dark:bg-gray-900/10 backdrop-blur-md border-b border-white/20 dark:border-gray-700 sticky top-0 z-50 transition-colors duration-300"
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.1 }}
+        initial={{ y: -100 }}
+        animate={{ y: 0 }}
+        transition={{ duration: 0.6, ease: 'easeOut' }}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
@@ -458,9 +444,13 @@ export default function HomePage() {
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.5 }}
             >
-              <div className="w-8 h-8 bg-gradient-to-br from-emerald-400 to-blue-500 rounded-lg flex items-center justify-center">
+              <motion.div
+                className="w-8 h-8 bg-gradient-to-br from-emerald-400 to-blue-500 rounded-lg flex items-center justify-center"
+                whileHover={{ rotate: 360 }}
+                transition={{ duration: 0.6 }}
+              >
                 <TreePine className="w-5 h-5 text-white" />
-              </div>
+              </motion.div>
               <span className="text-2xl font-bold text-white">
                 {process.env.NEXT_PUBLIC_APP_NAME}
               </span>
@@ -490,17 +480,19 @@ export default function HomePage() {
 
             <div className="flex items-center space-x-4">
               {/* Dark Mode Toggle */}
-              <button
+              <motion.button
                 onClick={toggleDarkMode}
                 className="p-2 rounded-lg bg-white/10 hover:bg-white/20 transition-colors duration-300"
                 aria-label="Toggle dark mode"
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
               >
                 {isDarkMode ? (
                   <Sun className="w-5 h-5 text-yellow-400" />
                 ) : (
                   <Moon className="w-5 h-5 text-gray-300" />
                 )}
-              </button>
+              </motion.button>
 
               {user ? (
                 <>
@@ -634,11 +626,20 @@ export default function HomePage() {
             <span className="text-sm">Weather</span>
           </motion.button>
 
+          <motion.button
+            onClick={() => setShowMap(true)}
+            className="flex items-center space-x-2 px-3 py-1 bg-green-500/20 hover:bg-green-500/30 text-green-300 rounded-lg transition-all duration-300"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            <MapPin className="w-4 h-4" />
+            <span className="text-sm">Map</span>
+          </motion.button>
         </div>
       </motion.div>
 
       {/* Cinematic Hero Section */}
-      <div className="relative min-h-screen flex items-center justify-center overflow-hidden">
+      <div ref={heroRef} className="relative min-h-screen flex items-center justify-center overflow-hidden">
         {/* Background Video/Image */}
         <motion.div
           className="absolute inset-0 z-0"
@@ -748,13 +749,13 @@ export default function HomePage() {
                 { icon: Users, label: 'Explorers', value: formatNumber(stats.explorers), suffix: '+', color: 'text-blue-400' },
                 { icon: Globe, label: 'Countries', value: stats.countries, suffix: '', color: 'text-purple-400' },
                 { icon: TrendingUp, label: 'Photos', value: formatNumber(stats.photos), suffix: '+', color: 'text-amber-400' },
-              ].map((stat, index) => (
+              ].map((stat, _index) => (
                 <motion.div
                   key={stat.label}
                   className="text-center group"
                   initial={{ opacity: 0, scale: 0.8 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.6, delay: 1.4 + index * 0.1 }}
+                  transition={{ duration: 0.6, delay: 1.4 + _index * 0.1 }}
                   whileHover={{ scale: 1.05, y: -5 }}
                 >
                   <motion.div
@@ -852,9 +853,10 @@ export default function HomePage() {
           transition={{ duration: 0.8, delay: 2.5 }}
         >
           <motion.div
-            className="w-6 h-10 border-2 border-white/30 rounded-full flex justify-center"
+            className="w-6 h-10 border-2 border-white/30 rounded-full flex justify-center cursor-pointer"
             animate={{ y: [0, 10, 0] }}
             transition={{ duration: 2, repeat: Infinity }}
+            whileHover={{ scale: 1.1 }}
           >
             <motion.div
               className="w-1 h-3 bg-white rounded-full mt-2"
@@ -913,7 +915,7 @@ export default function HomePage() {
                 title: 'Connect with Others',
                 description: 'Follow fellow adventurers and build a community of outdoor enthusiasts.',
                 bgClass: 'bg-gradient-to-br from-purple-100 to-violet-100 dark:from-purple-900/30 dark:to-violet-900/30',
-                hoverBgClass: 'group-hover:from-purple-200 group-hover:to-violet-200 dark:group-hover:from-purple-900/50 dark:group-hover:to-violet-900/50',
+                hoverBgClass: 'group-hover:from-purple-200 group-hover:to-violet-200 dark:group-hover:from-purple-900/50 dark:group-hover:to-purple-900/50',
                 iconClass: 'text-purple-600 dark:text-purple-400',
                 delay: 0.3,
               },
