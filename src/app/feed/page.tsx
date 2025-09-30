@@ -313,8 +313,8 @@ export default function FeedPage() {
   }, [])
 
   const handleActivityLike = useCallback((activityId: string) => {
-    setActivities((prevActivities: any[]) =>
-      prevActivities.map((activity: any) => {
+    setActivities((prevActivities: Activity[]) =>
+      prevActivities.map((activity: Activity) => {
         if (activity.id === activityId && 'likes' in activity && 'isLiked' in activity) {
           // TypeScript now knows this activity has likes/isLiked properties
           return {
@@ -332,8 +332,8 @@ export default function FeedPage() {
     // Simulate API call
     await new Promise(resolve => setTimeout(resolve, 300))
     
-    setActivities((prevActivities: any[]) =>
-      prevActivities.map((activity: any) =>
+    setActivities((prevActivities: Activity[]) =>
+      prevActivities.map((activity: Activity) =>
         activity.user.id === _userId
           ? { ...activity, user: { ...activity.user, isFollowing: !_isFollowing } }
           : activity

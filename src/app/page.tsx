@@ -68,6 +68,18 @@ interface Trip {
   isSaved?: boolean
 }
 
+interface Activity {
+  id: string
+  type: 'trip' | 'like' | 'comment' | 'follow'
+  user: User
+  timestamp: Date
+  content?: string
+  trip?: Trip
+  likes?: number
+  comments?: number
+  isLiked?: boolean
+}
+
 // Mock users for authentication
 const mockUsers: User[] = [
   {
@@ -408,7 +420,7 @@ const mockActivities = [
 
 export default function HomePage() {
   const [trips, setTrips] = useState(mockTrips)
-  const [activities, setActivities] = useState(mockActivities)
+  const [activities, setActivities] = useState<Activity[]>(mockActivities)
   const [loading, _setLoading] = useState(false)
   const [user, setUser] = useState(null)
   const [showAuthModal, setShowAuthModal] = useState(false)
@@ -599,7 +611,7 @@ export default function HomePage() {
     return num.toString()
   }
 
-  const handleAuth = (e: any) => {
+  const handleAuth = (e: React.FormEvent) => {
     e.preventDefault()
 
     if (authMode === 'signin') {
@@ -653,8 +665,8 @@ export default function HomePage() {
   }, [])
 
   const handleActivityLike = useCallback((activityId: string) => {
-    setActivities((prevActivities: any[]) =>
-      prevActivities.map((activity: any) => {
+    setActivities((prevActivities: Activity[]) =>
+      prevActivities.map((activity: Activity) => {
         if (activity.id === activityId && 'likes' in activity && 'isLiked' in activity) {
           // TypeScript now knows this activity has likes/isLiked properties
           return {
@@ -672,8 +684,8 @@ export default function HomePage() {
     // Simulate API call
     await new Promise(resolve => setTimeout(resolve, 300))
     
-    setActivities((prevActivities: any[]) =>
-      prevActivities.map((activity: any) =>
+    setActivities((prevActivities: Activity[]) =>
+      prevActivities.map((activity: Activity) =>
         activity.user.id === _userId
           ? { ...activity, user: { ...activity.user, isFollowing: !_isFollowing } }
           : activity
@@ -707,7 +719,7 @@ export default function HomePage() {
     setSearchQuery(query)
   }, [])
 
-  const handleMarkerClick = (_marker: any) => {
+  const handleMarkerClick = (_marker: { id: string; lat: number; lng: number; title: string }) => {
     // Handle map marker click
   }
 
@@ -748,7 +760,7 @@ export default function HomePage() {
                   type="text"
                   placeholder="Search adventures or ask AI..."
                   value={searchQuery}
-                  onChange={(e: any) => setSearchQuery(e.target.value)}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchQuery(e.target.value)}
                   className="w-full pl-10 pr-12 py-2 border border-white/20 rounded-lg focus:ring-2 focus:ring-emerald-400 focus:border-transparent bg-white/10 backdrop-blur-sm text-white placeholder-gray-300 transition-all duration-300 hover:bg-white/20"
                 />
                 <motion.button
@@ -851,7 +863,7 @@ export default function HomePage() {
             type="text"
             placeholder="Search adventures..."
             value={searchQuery}
-            onChange={(e: any) => setSearchQuery(e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchQuery(e.target.value)}
             className="w-full pl-10 pr-12 py-2 border border-white/20 rounded-lg focus:ring-2 focus:ring-emerald-400 focus:border-transparent bg-white/10 backdrop-blur-sm text-white placeholder-gray-300 transition-all duration-300 hover:bg-white/20"
           />
           <motion.button
@@ -906,7 +918,7 @@ export default function HomePage() {
             <SortAsc className="w-4 h-4 text-gray-300" />
             <select
               value={sortBy}
-              onChange={(e: any) => setSortBy(e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSortBy(e.target.value)}
               className="border border-white/20 rounded-lg px-3 py-1 text-sm focus:ring-2 focus:ring-emerald-400 focus:border-transparent bg-white/10 backdrop-blur-sm text-white transition-all duration-300 hover:bg-white/20"
             >
               <option value="recent">Most Recent</option>
@@ -1493,7 +1505,7 @@ export default function HomePage() {
                     type="text"
                     required
                     value={authForm.name}
-                    onChange={(e: any) => setAuthForm((prev: any) => ({ ...prev, name: e.target.value }))}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setAuthForm((prev) => ({ ...prev, name: e.target.value }))}
                     className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white transition-colors duration-300"
                     placeholder="Your name"
                   />
@@ -1508,7 +1520,7 @@ export default function HomePage() {
                   type="email"
                   required
                   value={authForm.email}
-                  onChange={(e: any) => setAuthForm((prev: any) => ({ ...prev, email: e.target.value }))}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setAuthForm((prev) => ({ ...prev, email: e.target.value }))}
                   className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white transition-colors duration-300"
                   placeholder="your@email.com"
                 />
@@ -1522,7 +1534,7 @@ export default function HomePage() {
                   type="password"
                   required
                   value={authForm.password}
-                  onChange={(e: any) => setAuthForm((prev: any) => ({ ...prev, password: e.target.value }))}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setAuthForm((prev) => ({ ...prev, password: e.target.value }))}
                   className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white transition-colors duration-300"
                   placeholder="••••••••"
                 />

@@ -6,7 +6,7 @@ import { Providers } from './providers'
 
 const inter = Inter({ subsets: ['latin'] })
 
-export const metadata: any = {
+export const metadata = {
   title: 'CampShare - Share Your Adventure Stories',
   description:
     'Connect with fellow outdoor enthusiasts, discover new camping spots, and inspire others with your wilderness adventures.',
@@ -32,7 +32,7 @@ export const metadata: any = {
   },
 }
 
-export default function RootLayout({ children }: { children: any }) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
       <body className={inter.className}>

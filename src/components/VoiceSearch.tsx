@@ -25,7 +25,7 @@ export function VoiceSearch({ onSearch, isOpen, onClose }: VoiceSearchProps) {
       recognitionRef.current.interimResults = true
       recognitionRef.current.lang = 'en-US'
 
-      recognitionRef.current.onresult = (event: any) => {
+      recognitionRef.current.onresult = (event: SpeechRecognitionEvent) => {
         const current = event.resultIndex
         const transcript = event.results[current][0].transcript
         setTranscript(transcript)
@@ -43,7 +43,7 @@ export function VoiceSearch({ onSearch, isOpen, onClose }: VoiceSearchProps) {
         }
       }
 
-      recognitionRef.current.onerror = (event: any) => {
+      recognitionRef.current.onerror = (event: SpeechRecognitionErrorEvent) => {
         console.error('Speech recognition error:', event.error)
         setIsListening(false)
         setTranscript('')

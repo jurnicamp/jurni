@@ -8,6 +8,20 @@ import React, { useState, useEffect } from 'react'
 
 import { CommentSection } from '@/components/CommentSection'
 
+interface Comment {
+  id: string
+  user: {
+    id: string
+    name: string
+    avatar: string
+  }
+  content: string
+  timestamp: Date
+  likes: number
+  isLiked: boolean
+  replies?: Comment[]
+}
+
 // Mock data
 const mockTrip = {
   id: '1',
@@ -102,8 +116,8 @@ interface TripDetailPageProps {
 }
 
 export default function TripDetailPage({ params }: TripDetailPageProps) {
-  const [trip, setTrip] = useState(null)
-  const [comments, setComments] = useState([])
+  const [trip, setTrip] = useState<any>(null)
+  const [comments, setComments] = useState<Comment[]>([])
   const [loading, setLoading] = useState(true)
   const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0)
   const [isLiked, setIsLiked] = useState(false)
@@ -164,7 +178,7 @@ export default function TripDetailPage({ params }: TripDetailPageProps) {
   }
 
   const handleCommentLike = (commentId: string) => {
-    const updateCommentLike = (commentList: any[]): any[] => {
+    const updateCommentLike = (commentList: Comment[]): Comment[] => {
       return commentList.map(comment => {
         if (comment.id === commentId) {
           return {
@@ -263,7 +277,7 @@ export default function TripDetailPage({ params }: TripDetailPageProps) {
                       ›
                     </button>
                     <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
-                      {trip.photos.map((_: any, index: number) => (
+                      {trip.photos.map((_: { url: string }, index: number) => (
                         <button
                           key={index}
                           onClick={() => setCurrentPhotoIndex(index)}
@@ -284,7 +298,7 @@ export default function TripDetailPage({ params }: TripDetailPageProps) {
               {/* Photo Thumbnails */}
               {trip.photos.length > 1 && (
                 <div className="p-4 flex space-x-2 overflow-x-auto">
-                  {trip.photos.map((photo: any, index: number) => (
+                  {trip.photos.map((photo: { url: string }, index: number) => (
                     <button
                       key={index}
                       onClick={() => setCurrentPhotoIndex(index)}

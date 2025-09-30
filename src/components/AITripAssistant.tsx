@@ -7,7 +7,7 @@ interface TripSuggestion {
   type: 'route' | 'weather' | 'gear' | 'timing' | 'safety'
   title: string
   description: string
-  icon: any
+  icon: React.ReactNode
   priority: 'high' | 'medium' | 'low'
   actionable: boolean
 }
@@ -153,7 +153,7 @@ export function AITripAssistant({ trip, isVisible, onClose }: AITripAssistantPro
               </div>
             ) : (
               <div className="space-y-4 max-h-96 overflow-y-auto">
-                {suggestions.map((suggestion: any, index: number) => (
+                {suggestions.map((suggestion: TripSuggestion, index: number) => (
                   <motion.div
                     key={suggestion.id}
                     className={`p-4 rounded-xl border transition-all duration-300 hover:shadow-lg ${
